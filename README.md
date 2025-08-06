@@ -126,25 +126,6 @@ PropDocs transforms how homeowners manage their most valuable asset by:
 - Reducing buyer inspection concerns with transparent asset history
 - Supporting premium pricing with documented property care
 
-## 🛠 Development Setup
-
-This project is currently set up as a Next.js web application for prototyping and initial development. The production MVP will be developed as a native iOS application.
-
-### Prerequisites
-- Node.js 18+ 
-- pnpm
-
-### Getting Started
-```bash
-# Install dependencies
-pnpm install
-
-# Run development server
-pnpm dev
-
-# Build for production
-pnpm build
-```
 
 ---
 
