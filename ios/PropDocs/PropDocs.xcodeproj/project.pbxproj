@@ -400,16 +400,16 @@
 				DEVELOPMENT_TEAM = 389Y5DY6GV;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSCameraUsageDescription = "PropDocs needs camera access to capture photos of your property assets for documentation and maintenance tracking.";
+				INFOPLIST_KEY_NSContactsUsageDescription = "PropDocs can import service provider contacts to help you manage maintenance providers more efficiently.";
+				INFOPLIST_KEY_NSFaceIDUsageDescription = "PropDocs uses Face ID to securely authenticate and protect your property information.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "PropDocs uses your location to provide accurate address suggestions when adding properties.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "PropDocs needs photo library access to select existing photos of your property assets for documentation.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_NSCameraUsageDescription = "PropDocs needs camera access to capture photos of your property assets for documentation and maintenance tracking.";
-				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "PropDocs needs photo library access to select existing photos of your property assets for documentation.";
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "PropDocs uses your location to provide accurate address suggestions when adding properties.";
-				INFOPLIST_KEY_NSContactsUsageDescription = "PropDocs can import service provider contacts to help you manage maintenance providers more efficiently.";
-				INFOPLIST_KEY_NSFaceIDUsageDescription = "PropDocs uses Face ID to securely authenticate and protect your property information.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -433,16 +433,16 @@
 				DEVELOPMENT_TEAM = 389Y5DY6GV;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSCameraUsageDescription = "PropDocs needs camera access to capture photos of your property assets for documentation and maintenance tracking.";
+				INFOPLIST_KEY_NSContactsUsageDescription = "PropDocs can import service provider contacts to help you manage maintenance providers more efficiently.";
+				INFOPLIST_KEY_NSFaceIDUsageDescription = "PropDocs uses Face ID to securely authenticate and protect your property information.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "PropDocs uses your location to provide accurate address suggestions when adding properties.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "PropDocs needs photo library access to select existing photos of your property assets for documentation.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_NSCameraUsageDescription = "PropDocs needs camera access to capture photos of your property assets for documentation and maintenance tracking.";
-				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "PropDocs needs photo library access to select existing photos of your property assets for documentation.";
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "PropDocs uses your location to provide accurate address suggestions when adding properties.";
-				INFOPLIST_KEY_NSContactsUsageDescription = "PropDocs can import service provider contacts to help you manage maintenance providers more efficiently.";
-				INFOPLIST_KEY_NSFaceIDUsageDescription = "PropDocs uses Face ID to securely authenticate and protect your property information.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

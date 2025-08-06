@@ -38,14 +38,14 @@ This document outlines the iOS client development milestones focused exclusively
 - [ ] Add App Groups capability for keychain sharing if needed
 
 **Authentication Implementation:**
-- [ ] Create AuthenticationManager.swift with protocols for auth providers
-- [ ] Implement SignInWithAppleCoordinator.swift using AuthenticationServices
-- [ ] Create GoogleSignInManager.swift with Google Sign In SDK integration
-- [ ] Build KeychainManager.swift for secure token storage and retrieval
-- [ ] Implement AuthenticationViewModel.swift with @Published auth state
-- [ ] Create AuthenticationRepository.swift for API token management
-- [ ] Setup AuthenticationStatus enum (authenticated, unauthenticated, loading)
-- [ ] Implement automatic token refresh logic with background tasks
+- [x] Create AuthenticationManager.swift with protocols for auth providers
+- [x] Implement SignInWithAppleCoordinator.swift using AuthenticationServices
+- [x] Create GoogleSignInManager.swift with Google Sign In SDK integration
+- [x] Build KeychainManager.swift for secure token storage and retrieval
+- [x] Implement AuthenticationViewModel.swift with @Published auth state
+- [x] Create AuthenticationRepository.swift for API token management
+- [x] Setup AuthenticationStatus enum (authenticated, unauthenticated, loading)
+- [x] Implement automatic token refresh logic with background tasks
 
 **Biometric Authentication:**
 - [ ] Create BiometricAuthenticationManager.swift using LocalAuthentication framework
