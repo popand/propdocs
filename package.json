@@ -1,12 +1,16 @@
 {
-  "name": "my-v0-project",
+  "name": "propdocs",
   "version": "0.1.0",
+  "description": "PropDocs - Property Asset Management System. A mobile-first application for tracking, maintaining, and managing household assets with AI-powered scheduling and real estate integration.",
   "private": true,
+  "keywords": ["property management", "asset tracking", "maintenance scheduling", "real estate", "home management", "iOS app"],
+  "author": "PropDocs Team",
   "scripts": {
     "build": "next build",
     "dev": "next dev",
     "lint": "next lint",
-    "start": "next start"
+    "start": "next start",
+    "type-check": "tsc --noEmit"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
