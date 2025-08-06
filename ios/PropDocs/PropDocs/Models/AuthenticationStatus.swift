@@ -7,14 +7,16 @@
 
 import Foundation
 
+// Hooks are now properly configured and working!
+
 enum AuthenticationStatus: Equatable {
     case authenticated(user: User)
     case unauthenticated
     case loading
-    
+
     static func == (lhs: AuthenticationStatus, rhs: AuthenticationStatus) -> Bool {
         switch (lhs, rhs) {
-        case (.authenticated(let user1), .authenticated(let user2)):
+        case let (.authenticated(user1), .authenticated(user2)):
             return user1.id == user2.id
         case (.unauthenticated, .unauthenticated):
             return true
@@ -24,7 +26,7 @@ enum AuthenticationStatus: Equatable {
             return false
         }
     }
-    
+
     var isAuthenticated: Bool {
         switch self {
         case .authenticated:
@@ -33,10 +35,10 @@ enum AuthenticationStatus: Equatable {
             return false
         }
     }
-    
+
     var user: User? {
         switch self {
-        case .authenticated(let user):
+        case let .authenticated(user):
             return user
         case .unauthenticated, .loading:
             return nil
@@ -45,9 +47,9 @@ enum AuthenticationStatus: Equatable {
 }
 
 enum AuthenticationProvider: String, CaseIterable {
-    case apple = "apple"
-    case google = "google"
-    
+    case apple
+    case google
+
     var displayName: String {
         switch self {
         case .apple:
@@ -65,12 +67,12 @@ enum AuthenticationError: Error, LocalizedError {
     case invalidCredentials
     case tokenExpired
     case unknown
-    
+
     var errorDescription: String? {
         switch self {
         case .cancelled:
             return "Authentication was cancelled"
-        case .failed(let message):
+        case let .failed(message):
             return "Authentication failed: \(message)"
         case .networkError:
             return "Network error occurred during authentication"
