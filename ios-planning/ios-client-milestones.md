@@ -28,11 +28,11 @@ This document outlines the iOS client development milestones focused exclusively
 **Implementation Tasks**:
 
 **Project Setup & Infrastructure:**
-- [ ] Create new iOS Xcode project with SwiftUI and Core Data template
-- [ ] Configure iOS deployment target (iOS 15.0+) in project settings
-- [ ] Setup project directory structure following architecture guidelines
-- [ ] Add required frameworks to project (AuthenticationServices, LocalAuthentication)
-- [ ] Create Info.plist entries for required permissions and URL schemes
+- [x] Create new iOS Xcode project with SwiftUI and Core Data template
+- [x] Configure iOS deployment target (iOS 15.0+) in project settings
+- [x] Setup project directory structure following architecture guidelines
+- [x] Add required frameworks to project (AuthenticationServices, LocalAuthentication)
+- [x] Create Info.plist entries for required permissions and URL schemes
 - [ ] Setup Sign in with Apple capability in Xcode project settings
 - [ ] Configure Google Sign In SDK and authentication flow
 - [ ] Add App Groups capability for keychain sharing if needed
