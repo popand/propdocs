@@ -122,7 +122,7 @@ Cloud Backend
 PropDocs transforms how homeowners manage their most valuable asset by:
 - Preventing costly emergency repairs through proactive maintenance
 - Maintaining comprehensive property documentation that enhances home value
-- Providing professional property reports that differentiate listings
+- Providing professional property reports that differentiate listings 
 - Reducing buyer inspection concerns with transparent asset history
 - Supporting premium pricing with documented property care
 
