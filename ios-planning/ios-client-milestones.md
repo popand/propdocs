@@ -25,6 +25,58 @@ This document outlines the iOS client development milestones focused exclusively
 - Biometric authentication setup
 - User onboarding flow with feature highlights
 
+**Implementation Tasks**:
+
+**Project Setup & Infrastructure:**
+- [ ] Create new iOS Xcode project with SwiftUI and Core Data template
+- [ ] Configure iOS deployment target (iOS 15.0+) in project settings
+- [ ] Setup project directory structure following architecture guidelines
+- [ ] Add required frameworks to project (AuthenticationServices, LocalAuthentication)
+- [ ] Create Info.plist entries for required permissions and URL schemes
+- [ ] Setup Sign in with Apple capability in Xcode project settings
+- [ ] Configure Google Sign In SDK and authentication flow
+- [ ] Add App Groups capability for keychain sharing if needed
+
+**Authentication Implementation:**
+- [ ] Create AuthenticationManager.swift with protocols for auth providers
+- [ ] Implement SignInWithAppleCoordinator.swift using AuthenticationServices
+- [ ] Create GoogleSignInManager.swift with Google Sign In SDK integration
+- [ ] Build KeychainManager.swift for secure token storage and retrieval
+- [ ] Implement AuthenticationViewModel.swift with @Published auth state
+- [ ] Create AuthenticationRepository.swift for API token management
+- [ ] Setup AuthenticationStatus enum (authenticated, unauthenticated, loading)
+- [ ] Implement automatic token refresh logic with background tasks
+
+**Biometric Authentication:**
+- [ ] Create BiometricAuthenticationManager.swift using LocalAuthentication framework
+- [ ] Implement BiometricSetupView.swift with Face ID/Touch ID enrollment
+- [ ] Add biometric authentication policy configuration
+- [ ] Create fallback authentication for when biometrics fail
+- [ ] Implement BiometricViewModel.swift with @Published biometric state
+- [ ] Add biometric authentication toggle in user settings
+- [ ] Handle biometric authentication errors and user feedback
+- [ ] Store biometric preference securely in keychain
+
+**Onboarding Flow:**
+- [ ] Create OnboardingFlowView.swift with page-based navigation
+- [ ] Design OnboardingPageView.swift as reusable page component
+- [ ] Implement welcome screen with app logo and value proposition
+- [ ] Build feature introduction screens (Asset Management, Maintenance, Reports)
+- [ ] Add onboarding progress indicator and skip functionality
+- [ ] Create OnboardingViewModel.swift to manage flow state
+- [ ] Implement completion tracking to prevent re-showing onboarding
+- [ ] Add accessibility labels and VoiceOver support for all onboarding elements
+
+**Permissions Management:**
+- [ ] Create PermissionsManager.swift to handle all app permissions
+- [ ] Implement PermissionsRequestView.swift with clear permission explanations
+- [ ] Add camera permission request with usage description
+- [ ] Setup photo library access permission with PHPhotoLibrary
+- [ ] Implement notification permission request using UserNotifications
+- [ ] Create permission status checking and re-request flows
+- [ ] Add permission denied handling with settings app navigation
+- [ ] Build PermissionsViewModel.swift with @Published permission states
+
 ---
 
 #### Milestone 1.2: Property Setup & Profile Management Screens
@@ -45,6 +97,58 @@ This document outlines the iOS client development milestones focused exclusively
 - Multi-property management UI
 - Settings organization with sections
 
+**Implementation Tasks**:
+
+**Property Setup Infrastructure:**
+- [ ] Create Property.swift model with Core Data entity mapping
+- [ ] Implement PropertyRepository.swift with CRUD operations
+- [ ] Build PropertyViewModel.swift with @Published property state
+- [ ] Setup PropertyType enum (house, condo, apartment, commercial)
+- [ ] Create PropertyAddress.swift model with validation logic
+- [ ] Implement property photo upload service with compression
+- [ ] Add property creation form validation and error handling
+- [ ] Setup multi-property support with active property switching
+
+**Address Autocomplete Implementation:**
+- [ ] Create AddressAutocompleteManager.swift using MapKit MKLocalSearchCompleter
+- [ ] Implement AddressAutocompleteView.swift with search results list
+- [ ] Add debounced search functionality to prevent API overload
+- [ ] Create AddressResult.swift model for search result handling
+- [ ] Implement location coordinate extraction from selected addresses
+- [ ] Add fallback manual address entry when autocomplete fails
+- [ ] Handle location permissions for improved autocomplete accuracy
+- [ ] Create AddressViewModel.swift with @Published search results
+
+**Property Management Views:**
+- [ ] Build PropertySetupView.swift with step-by-step property creation
+- [ ] Create PropertyTypeSelectionView.swift with visual type picker
+- [ ] Implement MultiPropertySwitcherView.swift with property list and switching
+- [ ] Add PropertyCardView.swift component for property display
+- [ ] Build property photo capture and gallery management
+- [ ] Create PropertyEditView.swift for updating property information
+- [ ] Implement property deletion with confirmation alerts
+- [ ] Add property sharing and export functionality
+
+**User Profile Management:**
+- [ ] Create User.swift model with Core Data integration
+- [ ] Implement UserProfileView.swift with editable profile fields
+- [ ] Build profile photo upload with camera and photo library options
+- [ ] Add UserViewModel.swift with @Published user state management
+- [ ] Create profile information validation (name, email, phone)
+- [ ] Implement account deletion flow with data export options
+- [ ] Add user preferences and settings persistence
+- [ ] Setup profile synchronization with API backend
+
+**Settings Implementation:**
+- [ ] Create SettingsView.swift with grouped settings sections
+- [ ] Build NotificationSettingsView.swift for notification preferences
+- [ ] Implement app theme selection (light, dark, system)
+- [ ] Add data export and import functionality
+- [ ] Create privacy settings and data deletion options
+- [ ] Build about section with app version and legal information
+- [ ] Add feedback and support contact options
+- [ ] Implement settings persistence using UserDefaults and keychain
+
 ---
 
 #### Milestone 1.3: Core Data Setup & API Client Infrastructure
@@ -63,6 +167,48 @@ This document outlines the iOS client development milestones focused exclusively
 - Repository pattern for API integration
 - Background App Refresh setup
 - Offline data access patterns
+
+**Implementation Tasks**:
+
+**Core Data Foundation:**
+- [ ] Design Core Data model (.xcdatamodeld) with all required entities
+- [ ] Create CoreDataStack.swift with NSPersistentContainer setup
+- [ ] Implement background context for heavy operations
+- [ ] Add Core Data entity extensions for convenience methods
+- [ ] Setup Core Data sync status tracking (synced, pending, failed)
+- [ ] Create Core Data migration strategy for future schema changes
+- [ ] Implement Core Data performance optimization (batch operations, faulting)
+- [ ] Add Core Data error handling and recovery mechanisms
+
+**API Client Architecture:**
+- [ ] Create APIClient.swift with URLSession and async/await support
+- [ ] Implement APIEndpoints.swift with all backend endpoint definitions
+- [ ] Build APIRequest.swift protocol for type-safe API requests
+- [ ] Add APIResponse.swift with standardized response handling
+- [ ] Create authentication header injection for protected endpoints
+- [ ] Implement request retry logic with exponential backoff
+- [ ] Add request/response logging for debugging (development only)
+- [ ] Build API error handling with user-friendly error messages
+
+**Network Monitoring:**
+- [ ] Create NetworkMonitor.swift using Network framework
+- [ ] Implement connection type detection (wifi, cellular, none)
+- [ ] Add network quality assessment for upload optimization
+- [ ] Build offline mode detection and UI state management
+- [ ] Create network connectivity change notifications
+- [ ] Implement smart sync strategies based on connection quality
+- [ ] Add background network task handling
+- [ ] Build network error recovery and retry mechanisms
+
+**Background Sync Implementation:**
+- [ ] Create SyncService.swift for orchestrating data synchronization
+- [ ] Implement SyncQueue.swift for managing pending sync operations
+- [ ] Build conflict resolution logic for concurrent data modifications
+- [ ] Add background app refresh setup with BGAppRefreshTask
+- [ ] Create sync status indicators in UI components
+- [ ] Implement optimistic UI updates with rollback on failure
+- [ ] Add sync prioritization (user-initiated vs background)
+- [ ] Build sync health monitoring and diagnostics
 
 ---
 
@@ -86,6 +232,58 @@ This document outlines the iOS client development milestones focused exclusively
 - Asset type classification UI
 - Form validation and error handling
 - Background photo upload with progress tracking
+
+**Implementation Tasks**:
+
+**Asset Model & Repository:**
+- [ ] Create Asset.swift model with comprehensive property definitions
+- [ ] Build AssetRepository.swift with full CRUD operations
+- [ ] Implement AssetViewModel.swift with @Published state management
+- [ ] Add AssetType.swift enum with all supported asset categories
+- [ ] Create AssetCondition.swift enum (excellent, good, fair, poor)
+- [ ] Setup asset photo relationships with Core Data
+- [ ] Implement asset search and filtering logic
+- [ ] Add asset import/export functionality
+
+**Camera Integration:**
+- [ ] Create CameraManager.swift using AVFoundation framework
+- [ ] Build CameraView.swift with custom camera interface
+- [ ] Implement photo capture with automatic optimization
+- [ ] Add camera permission handling and error states
+- [ ] Create flash control and camera switching functionality
+- [ ] Build photo preview and retake functionality
+- [ ] Implement camera overlay for asset photo guidelines
+- [ ] Add accessibility support for camera operations
+
+**Photo Library Integration:**
+- [ ] Create PhotoLibraryManager.swift using PhotosUI framework
+- [ ] Implement PHPickerViewController for multiple photo selection
+- [ ] Add photo permission requests and handling
+- [ ] Build photo compression and resizing logic
+- [ ] Create photo metadata extraction (EXIF, location)
+- [ ] Implement photo organization and album creation
+- [ ] Add photo duplicate detection and prevention
+- [ ] Build photo backup and cloud sync preparation
+
+**Asset Creation Flow:**
+- [ ] Build AddAssetView.swift with step-by-step asset creation
+- [ ] Create AssetTypeSelectionView.swift with visual category picker
+- [ ] Implement AssetDetailsEntryView.swift with form validation
+- [ ] Add asset photo capture workflow with multiple photos
+- [ ] Build asset location assignment within property
+- [ ] Create asset QR code generation for physical labeling
+- [ ] Implement asset creation progress tracking
+- [ ] Add draft saving for incomplete asset creation
+
+**Photo Upload Service:**
+- [ ] Create PhotoUploadService.swift with background upload support
+- [ ] Implement upload progress tracking and UI indicators
+- [ ] Build upload queue management with retry logic
+- [ ] Add photo compression before upload to optimize bandwidth
+- [ ] Create upload failure handling and manual retry options
+- [ ] Implement background upload task management
+- [ ] Add upload analytics and performance monitoring
+- [ ] Build photo sync status tracking per asset
 
 ---
 
