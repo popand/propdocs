@@ -1,0 +1,123 @@
+# SwiftFormat Configuration File
+# Place this file in your project root directory
+
+# MARK: - Indentation & Spacing
+--indent 4
+--tabwidth 4
+--smarttabs enabled
+--maxwidth 120
+
+# MARK: - Line Breaks & Whitespace  
+--linebreaks lf
+--trimwhitespace always
+--insertlines enabled
+--removelines enabled
+
+# MARK: - Braces & Brackets
+--allman false
+--wraparguments preserve
+--wrapparameters preserve
+--wrapcollections preserve
+--closingparen balanced
+--wrapreturntype preserve
+--wrapeffects preserve
+
+# MARK: - Imports
+--importgrouping testable-bottom
+--testableimports alphabetized
+
+# MARK: - Comments & Documentation
+--doccomments preserve
+--stripunusedargs closure-only
+
+# MARK: - Control Flow
+--elseposition same-line
+--guardelse auto
+--ifdef no-indent
+
+# MARK: - Functions & Closures
+--trailingclosures
+--nospaceoperators ...,..<
+--operatorfunc spaced
+--ranges spaced
+
+# MARK: - Types & Generics
+--shortoptionals always
+--redundanttype inferred
+--explicitself remove
+--selfrequired 
+
+# MARK: - SwiftUI Specific
+--swiftversion 5.5
+
+# MARK: - Disabled Rules
+# Uncomment rules below if you want to disable them
+# --disable andOperator
+# --disable blankLinesAroundMark  
+# --disable blankLinesAtEndOfScope
+# --disable blankLinesAtStartOfScope
+# --disable consecutiveBlankLines
+# --disable consecutiveSpaces
+# --disable duplicateImports
+# --disable elseOnSameLine
+# --disable emptyBraces
+# --disable hoistPatternLet
+# --disable indent
+# --disable leadingDelimiters
+# --disable linebreakAtEndOfFile
+# --disable numberFormatting
+# --disable preferKeyPath
+# --disable redundantBackticks
+# --disable redundantBreak
+# --disable redundantExtensionACL
+# --disable redundantFileprivate
+# --disable redundantGet
+# --disable redundantInit
+# --disable redundantLet
+# --disable redundantLetError
+# --disable redundantNilInit
+# --disable redundantObjc
+# --disable redundantParens
+# --disable redundantPattern
+# --disable redundantRawValues
+# --disable redundantReturn
+# --disable redundantSelf
+# --disable redundantType
+# --disable redundantVoidReturnType
+# --disable semicolons
+# --disable sortedImports
+# --disable spaceAroundBraces
+# --disable spaceAroundBrackets
+# --disable spaceAroundComments
+# --disable spaceAroundGenerics
+# --disable spaceAroundOperators
+# --disable spaceAroundParens
+# --disable spaceInsideBraces
+# --disable spaceInsideBrackets
+# --disable spaceInsideComments
+# --disable spaceInsideGenerics
+# --disable spaceInsideParens
+# --disable strongifiedSelf
+# --disable todos
+# --disable trailingClosures
+# --disable trailingCommas
+# --disable trailingSpace
+# --disable typeSugar
+# --disable unusedArguments
+# --disable void
+# --disable wrap
+# --disable wrapArguments
+# --disable wrapMultilineStatementBraces
+# --disable yodaConditions
+
+# MARK: - File Exclusions
+--exclude Pods,Carthage,.build,DerivedData,vendor
+--exclude **/*Generated*
+--exclude **/*.generated.swift
+--exclude **/*.pb.swift
+
+# MARK: - Experimental Rules (SwiftFormat 0.50+)
+# Uncomment to enable experimental features
+# --enable isEmpty
+# --enable sortTypealiases
+# --enable wrapMultilineConditionalAssignment
