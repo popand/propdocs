@@ -32,7 +32,8 @@
     ├── architecture/        # iOS app architecture documents
     ├── data-models/         # Core Data models and schemas
     ├── screens/             # Screen layouts and navigation flows
-    └── features/            # Detailed iOS implementation specifications
+    ├── features/            # Detailed iOS implementation specifications
+    └── ios-client-milestones.md  # 16-week development milestones for iOS client
 ```
 
 ## iOS Development Structure
