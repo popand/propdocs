@@ -167,22 +167,13 @@ To become the definitive platform for residential asset management, enabling hom
 
 ## Key Commands
 
-### Web Development (Current Prototype)
+### Documentation and Planning
 ```bash
-# Install dependencies
-pnpm install
+# View iOS project documentation
+npm run docs
 
-# Run development server  
-pnpm dev
-
-# Build for production
-pnpm build
-
-# Run linting
-pnpm lint
-
-# Run type checking
-pnpm type-check
+# Validate documentation structure  
+npm run validate
 ```
 
 ### iOS Development
