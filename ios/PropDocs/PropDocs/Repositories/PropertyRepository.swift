@@ -296,6 +296,7 @@ enum PropertyRepositoryError: Error, LocalizedError {
     case invalidData
     case propertyNotFound
     case userNotFound
+    case timeout
     
     var errorDescription: String? {
         switch self {
@@ -315,6 +316,8 @@ enum PropertyRepositoryError: Error, LocalizedError {
             return "Property not found"
         case .userNotFound:
             return "User not found"
+        case .timeout:
+            return "Operation timed out"
         }
     }
 }
@@ -404,32 +407,22 @@ extension Publisher where Failure == Error {
     func async() async throws -> Output {
         return try await withCheckedThrowingContinuation { continuation in
             var cancellable: AnyCancellable?
-            let timeoutError = PropertyRepositoryError.fetchFailed(NSError(domain: "Publisher.async", code: -1001, userInfo: [NSLocalizedDescriptionKey: "Operation timed out"]))
             
             cancellable = first()
                 .timeout(.seconds(30), scheduler: DispatchQueue.global()) {
-                    timeoutError
+                    PropertyRepositoryError.timeout
                 }
                 .sink(
                     receiveCompletion: { completion in
-                        defer { 
-                            cancellable?.cancel()
-                            cancellable = nil
-                        }
-                        
+                        defer { cancellable = nil }
                         switch completion {
-                        case .finished:
-                            // Value was already handled in receiveValue
-                            break
-                        case .failure(let error):
+                        case .finished: break
+                        case .failure(let error): 
                             continuation.resume(throwing: error)
                         }
                     },
                     receiveValue: { value in
-                        defer { 
-                            cancellable?.cancel()
-                            cancellable = nil
-                        }
+                        defer { cancellable = nil }
                         continuation.resume(returning: value)
                     }
                 )
