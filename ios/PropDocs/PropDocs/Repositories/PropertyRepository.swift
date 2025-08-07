@@ -404,20 +404,29 @@ extension Publisher where Failure == Error {
     func async() async throws -> Output {
         return try await withCheckedThrowingContinuation { continuation in
             var cancellable: AnyCancellable?
+            
             cancellable = first()
+                .timeout(.seconds(30), scheduler: DispatchQueue.global())
                 .sink(
                     receiveCompletion: { completion in
+                        defer { 
+                            cancellable?.cancel()
+                            cancellable = nil
+                        }
+                        
                         switch completion {
                         case .finished:
                             break
                         case .failure(let error):
                             continuation.resume(throwing: error)
                         }
-                        cancellable?.cancel()
                     },
                     receiveValue: { value in
+                        defer { 
+                            cancellable?.cancel()
+                            cancellable = nil
+                        }
                         continuation.resume(returning: value)
-                        cancellable?.cancel()
                     }
                 )
         }
