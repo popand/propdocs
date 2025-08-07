@@ -28,3 +28,27 @@ next-env.d.ts
 
 # Claude context file
 CLAUDE.md
+
+# Xcode
+*.xcodeproj/*
+!*.xcodeproj/project.pbxproj
+!*.xcodeproj/*.xcscheme
+!*.xcodeproj/xcshareddata/
+*.xcworkspace/xcuserdata/
+*.xcuserstate
+xcuserdata/
+DerivedData/
+build/
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# CocoaPods
+Pods/
+
+# Carthage
+Carthage/Build/
+
+# Swift Package Manager
+.build/
+.swiftpm/
