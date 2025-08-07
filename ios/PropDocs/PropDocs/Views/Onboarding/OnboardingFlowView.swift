@@ -44,7 +44,7 @@ struct OnboardingFlowView: View {
                     .padding(.bottom, 32)
             }
         }
-        .navigationBarHidden(true)
+        .toolbar(.hidden, for: .navigationBar)
         .onAppear {
             viewModel.startOnboarding()
         }
