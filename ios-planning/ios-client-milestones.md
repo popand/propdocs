@@ -58,14 +58,14 @@ This document outlines the iOS client development milestones focused exclusively
 - [x] Store biometric preference securely in keychain
 
 **Onboarding Flow:**
-- [ ] Create OnboardingFlowView.swift with page-based navigation
-- [ ] Design OnboardingPageView.swift as reusable page component
-- [ ] Implement welcome screen with app logo and value proposition
-- [ ] Build feature introduction screens (Asset Management, Maintenance, Reports)
-- [ ] Add onboarding progress indicator and skip functionality
-- [ ] Create OnboardingViewModel.swift to manage flow state
-- [ ] Implement completion tracking to prevent re-showing onboarding
-- [ ] Add accessibility labels and VoiceOver support for all onboarding elements
+- [x] Create OnboardingFlowView.swift with page-based navigation
+- [x] Design OnboardingPageView.swift as reusable page component
+- [x] Implement welcome screen with app logo and value proposition
+- [x] Build feature introduction screens (Asset Management, Maintenance, Reports)
+- [x] Add onboarding progress indicator and skip functionality
+- [x] Create OnboardingViewModel.swift to manage flow state
+- [x] Implement completion tracking to prevent re-showing onboarding
+- [x] Add accessibility labels and VoiceOver support for all onboarding elements
 
 **Permissions Management:**
 - [ ] Create PermissionsManager.swift to handle all app permissions
