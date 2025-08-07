@@ -4,6 +4,71 @@
 
 PropDocs is a comprehensive property management iOS application built with SwiftUI and Core Data, designed to help users manage property assets, maintenance schedules, and documentation. The app follows a 16-week development timeline divided into 6 phases, with a focus on offline-first architecture and seamless user experience.
 
+
+## Current Tech Stack
+- iOS 17.0+ target
+- SwiftUI primary framework
+- Swift 5.9+
+- Xcode 15+
+
+## Key Requirements
+- Comprehensive asset management system for property inventory, including:
+  - Capture and storage of detailed asset information (type, make, model, specifications)
+  - Photo documentation for each asset
+  - Organization by category (HVAC, Plumbing, Electrical, Appliances, etc.)
+  - Search and filter capabilities
+  - Full offline functionality with automatic sync
+
+- Intelligent maintenance scheduling:
+  - AI-generated maintenance schedules based on asset type and manufacturer recommendations
+  - Custom schedule creation and modification
+  - Calendar view for upcoming tasks
+  - Timely notifications and reminders
+  - Task completion tracking with photos and notes
+  - Offline task completion with sync
+
+- Service history and documentation:
+  - Tracking of all maintenance activities with detailed service records
+  - Digital storage of receipts, warranties, and related documents
+  - Service provider contact management and ratings
+  - Generation of comprehensive property maintenance reports
+  - Mobile document scanning and digitization
+  - Export of service history for sales or insurance
+
+- User management and property setup:
+  - Secure authentication (Sign in with Apple, Google Sign In)
+  - Biometric authentication (Face ID/Touch ID)
+  - Property setup with address autocomplete and support for multiple properties
+  - User preferences and profile management
+
+- Property showcase and real estate integration:
+  - Generation of professional property reports (asset inventory, maintenance history)
+  - Secure, shareable links and QR code generation for listings
+  - Customizable report content and privacy controls
+  - Engagement analytics for shared reports
+  - Public-facing property showcase interface
+
+- Dashboard and analytics (P1):
+  - Home dashboard with property health overview and recent activity
+  - Visual charts for maintenance costs and trends
+  - Health scores and color-coded indicators
+  - iOS Calendar integration for maintenance tasks
+  - Cost analytics and budget tracking
+
+- Success criteria:
+  - High user onboarding and engagement rates
+  - Strong feature adoption (offline use, photo capture, report sharing)
+  - Tangible business impact (reduced emergency costs, improved property sale outcomes, enhanced value demonstration)
+
+
+## Agent Interaction Guidelines
+- UX Engineer should be consulted for user flow and experience decisions
+- UI Engineer should be consulted for visual design and component specifications  
+- iOS Developer should be consulted for implementation and architecture decisions
+- All agents should consider iOS Human Interface Guidelines
+- Maintain consistency between agent recommendations
+
+
 ## Current Development Status
 
 ### ✅ **Completed Milestones**

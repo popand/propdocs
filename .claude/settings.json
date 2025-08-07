@@ -1,0 +1,54 @@
+{
+  "model": "sonnet",
+  "permissions": {
+    "allow": [
+      "Bash(mkdir:*)",
+      "Bash(rm:*)",
+      "Bash(sed:*)",
+      "Bash(xcodebuild:*)",
+      "Bash(git checkout:*)",
+      "Bash(git push:*)",
+      "Bash(find:*)",
+      "Bash(git commit:*)",
+      "Bash(swift:*)",
+      "Bash(swiftformat:*)",
+      "Bash(swiftlint:*)",
+      "Edit(*.swift)",
+      "Edit(*.md)",
+      "Write(*.swift)",
+      "Write(*.md)",
+      "Read(*)",
+      "Grep(*)",
+      "Glob(*)",
+      "MultiEdit(*.swift)",
+      "Task(*)"
+    ],
+    "deny": [
+      "Write(*.plist)",
+      "Edit(*.plist)",
+      "Bash(rm:-rf /)",
+      "Bash(rm:-rf ~)"
+    ]
+  },
+  "ignorePatterns": [
+    ".build/**",
+    "DerivedData/**",
+    "*.xcworkspace/xcuserdata/**",
+    "*.xcodeproj/xcuserdata/**",
+    "*.xcodeproj/project.xcworkspace/xcuserdata/**",
+    ".swiftpm/**",
+    "build/**",
+    ".git/**",
+    "Pods/**",
+    "*.dSYM/**",
+    "fastlane/report.xml",
+    "fastlane/Preview.html",
+    "fastlane/screenshots/**",
+    "fastlane/test_output/**"
+  ],
+  "contextFiles": [
+    ".claude/project-context.md",
+    "ios-planning/ios-client-milestones.md",
+    "README.md"
+  ]
+}
