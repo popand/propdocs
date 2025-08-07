@@ -48,14 +48,14 @@ This document outlines the iOS client development milestones focused exclusively
 - [x] Implement automatic token refresh logic with background tasks
 
 **Biometric Authentication:**
-- [ ] Create BiometricAuthenticationManager.swift using LocalAuthentication framework
-- [ ] Implement BiometricSetupView.swift with Face ID/Touch ID enrollment
-- [ ] Add biometric authentication policy configuration
-- [ ] Create fallback authentication for when biometrics fail
-- [ ] Implement BiometricViewModel.swift with @Published biometric state
-- [ ] Add biometric authentication toggle in user settings
-- [ ] Handle biometric authentication errors and user feedback
-- [ ] Store biometric preference securely in keychain
+- [x] Create BiometricAuthenticationManager.swift using LocalAuthentication framework
+- [x] Implement BiometricSetupView.swift with Face ID/Touch ID enrollment
+- [x] Add biometric authentication policy configuration
+- [x] Create fallback authentication for when biometrics fail
+- [x] Implement BiometricViewModel.swift with @Published biometric state
+- [x] Add biometric authentication toggle in user settings
+- [x] Handle biometric authentication errors and user feedback
+- [x] Store biometric preference securely in keychain
 
 **Onboarding Flow:**
 - [ ] Create OnboardingFlowView.swift with page-based navigation
