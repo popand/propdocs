@@ -45,15 +45,13 @@ class PermissionsViewModel: ObservableObject {
             isLoading = false
         }
         
-        do {
-            let result = await permissionsManager.requestPermission(for: permission)
-            
-            if let permissionError = result.error {
-                handlePermissionError(permissionError, for: permission)
-            }
-            
-            return result
+        let result = await permissionsManager.requestPermission(for: permission)
+        
+        if let permissionError = result.error {
+            handlePermissionError(permissionError, for: permission)
         }
+        
+        return result
     }
     
     func requestAllPermissions() async -> [PermissionResult] {
@@ -85,6 +83,15 @@ class PermissionsViewModel: ObservableObject {
         error = nil
         
         await permissionsManager.checkAllPermissionStatuses()
+        
+        isLoading = false
+    }
+    
+    func forceRefreshPermissions() async {
+        isLoading = true
+        error = nil
+        
+        await permissionsManager.forceRefreshPermissionStatuses()
         
         isLoading = false
     }

@@ -138,6 +138,10 @@ class PermissionsManager: ObservableObject {
     
     @Published private(set) var isCheckingPermissions = false
     
+    // Throttling mechanism
+    private var lastStatusCheckTime: Date?
+    private let statusCheckThrottleInterval: TimeInterval = 5.0 // 5 seconds
+    
     private init() {
         Task {
             await checkAllPermissionStatuses()
@@ -158,7 +162,15 @@ class PermissionsManager: ObservableObject {
     }
     
     func checkAllPermissionStatuses() async {
+        // Check if we should throttle the status check
+        if let lastCheck = lastStatusCheckTime,
+           Date().timeIntervalSince(lastCheck) < statusCheckThrottleInterval {
+            // Skip check if within throttle interval
+            return
+        }
+        
         isCheckingPermissions = true
+        lastStatusCheckTime = Date()
         
         async let camera = checkCameraStatus()
         async let photoLibrary = checkPhotoLibraryStatus()
@@ -173,13 +185,19 @@ class PermissionsManager: ObservableObject {
         isCheckingPermissions = false
     }
     
+    func forceRefreshPermissionStatuses() async {
+        // Bypass throttling by clearing the last check time
+        lastStatusCheckTime = nil
+        await checkAllPermissionStatuses()
+    }
+    
     private func checkCameraStatus() async -> PermissionStatus {
         let status = AVCaptureDevice.authorizationStatus(for: .video)
         return mapAVAuthorizationStatus(status)
     }
     
     private func checkPhotoLibraryStatus() async -> PermissionStatus {
-        let status = PHPhotoLibrary.authorizationStatus(for: .addOnly)
+        let status = PHPhotoLibrary.authorizationStatus(for: .readWrite)
         return mapPHAuthorizationStatus(status)
     }
     
@@ -224,7 +242,7 @@ class PermissionsManager: ObservableObject {
     }
     
     private func requestPhotoLibraryPermission() async -> PermissionResult {
-        let currentStatus = PHPhotoLibrary.authorizationStatus(for: .addOnly)
+        let currentStatus = PHPhotoLibrary.authorizationStatus(for: .readWrite)
         
         guard currentStatus == .notDetermined else {
             let status = mapPHAuthorizationStatus(currentStatus)
@@ -238,7 +256,7 @@ class PermissionsManager: ObservableObject {
         }
         
         return await withCheckedContinuation { continuation in
-            PHPhotoLibrary.requestAuthorization(for: .addOnly) { status in
+            PHPhotoLibrary.requestAuthorization(for: .readWrite) { status in
                 Task { @MainActor in
                     let mappedStatus = self.mapPHAuthorizationStatus(status)
                     self.photoLibraryStatus = mappedStatus
