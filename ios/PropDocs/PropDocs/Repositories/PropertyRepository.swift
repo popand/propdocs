@@ -404,9 +404,12 @@ extension Publisher where Failure == Error {
     func async() async throws -> Output {
         return try await withCheckedThrowingContinuation { continuation in
             var cancellable: AnyCancellable?
+            let timeoutError = PropertyRepositoryError.fetchFailed(NSError(domain: "Publisher.async", code: -1001, userInfo: [NSLocalizedDescriptionKey: "Operation timed out"]))
             
             cancellable = first()
-                .timeout(.seconds(30), scheduler: DispatchQueue.global())
+                .timeout(.seconds(30), scheduler: DispatchQueue.global()) {
+                    timeoutError
+                }
                 .sink(
                     receiveCompletion: { completion in
                         defer { 
@@ -416,6 +419,7 @@ extension Publisher where Failure == Error {
                         
                         switch completion {
                         case .finished:
+                            // Value was already handled in receiveValue
                             break
                         case .failure(let error):
                             continuation.resume(throwing: error)
