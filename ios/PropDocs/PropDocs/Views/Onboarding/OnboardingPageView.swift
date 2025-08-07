@@ -9,17 +9,17 @@ import SwiftUI
 
 struct OnboardingPageView: View {
     let page: OnboardingPage
-    
+
     var body: some View {
         VStack(spacing: 32) {
             Spacer()
-            
+
             // Icon/Image section
             iconSection
-            
+
             // Content section
             contentSection
-            
+
             Spacer()
             Spacer() // Extra spacer to push content up slightly
         }
@@ -27,9 +27,9 @@ struct OnboardingPageView: View {
         .accessibilityElement(children: .combine)
         .accessibilityLabel("\(page.title). \(page.subtitle). \(page.description)")
     }
-    
+
     // MARK: - Icon Section
-    
+
     private var iconSection: some View {
         ZStack {
             // Background circle with gradient
@@ -43,7 +43,7 @@ struct OnboardingPageView: View {
                 )
                 .frame(width: 140, height: 140)
                 .shadow(color: page.iconColors.first?.opacity(0.3) ?? .clear, radius: 20, x: 0, y: 10)
-            
+
             // Icon
             Image(systemName: page.iconName)
                 .font(.system(size: 60, weight: .light))
@@ -52,9 +52,9 @@ struct OnboardingPageView: View {
         .scaleEffect(1.0)
         .animation(.spring(response: 0.8, dampingFraction: 0.6), value: page.iconName)
     }
-    
+
     // MARK: - Content Section
-    
+
     private var contentSection: some View {
         VStack(spacing: 16) {
             // Title
@@ -63,7 +63,7 @@ struct OnboardingPageView: View {
                 .fontWeight(.bold)
                 .multilineTextAlignment(.center)
                 .foregroundColor(.primary)
-            
+
             // Subtitle
             if !page.subtitle.isEmpty {
                 Text(page.subtitle)
@@ -72,7 +72,7 @@ struct OnboardingPageView: View {
                     .multilineTextAlignment(.center)
                     .foregroundColor(.secondary)
             }
-            
+
             // Description
             Text(page.description)
                 .font(.body)
@@ -80,7 +80,7 @@ struct OnboardingPageView: View {
                 .foregroundColor(.secondary)
                 .lineSpacing(4)
                 .padding(.horizontal, 8)
-            
+
             // Features list (if available)
             if !page.features.isEmpty {
                 featuresSection
@@ -88,9 +88,9 @@ struct OnboardingPageView: View {
             }
         }
     }
-    
+
     // MARK: - Features Section
-    
+
     private var featuresSection: some View {
         VStack(alignment: .leading, spacing: 12) {
             ForEach(page.features, id: \.self) { feature in
@@ -99,12 +99,12 @@ struct OnboardingPageView: View {
                         .foregroundColor(.green)
                         .font(.system(size: 16))
                         .padding(.top, 2)
-                    
+
                     Text(feature)
                         .font(.body)
                         .foregroundColor(.primary)
                         .fixedSize(horizontal: false, vertical: true)
-                    
+
                     Spacer()
                 }
             }
@@ -127,7 +127,7 @@ struct OnboardingPage {
     let iconName: String
     let iconColors: [Color]
     let features: [String]
-    
+
     init(
         id: String,
         title: String,
@@ -158,7 +158,7 @@ extension OnboardingPage {
         iconName: "house.fill",
         iconColors: [.blue, .purple]
     )
-    
+
     static let assetManagement = OnboardingPage(
         id: "assets",
         title: "Asset Management",
@@ -170,10 +170,10 @@ extension OnboardingPage {
             "Photo documentation with detailed records",
             "Asset categorization and search",
             "Condition tracking over time",
-            "QR code labeling system"
+            "QR code labeling system",
         ]
     )
-    
+
     static let maintenance = OnboardingPage(
         id: "maintenance",
         title: "Maintenance Tracking",
@@ -185,10 +185,10 @@ extension OnboardingPage {
             "Smart scheduling with reminders",
             "Service provider management",
             "Cost tracking and budgeting",
-            "Before and after photos"
+            "Before and after photos",
         ]
     )
-    
+
     static let reports = OnboardingPage(
         id: "reports",
         title: "Property Reports",
@@ -200,7 +200,7 @@ extension OnboardingPage {
             "Customizable report templates",
             "Secure sharing with QR codes",
             "Privacy controls for sensitive data",
-            "Export to PDF or web links"
+            "Export to PDF or web links",
         ]
     )
 }
@@ -213,15 +213,15 @@ struct OnboardingPageView_Previews: PreviewProvider {
             // Welcome page
             OnboardingPageView(page: .welcome)
                 .previewDisplayName("Welcome Page")
-            
+
             // Asset management page
             OnboardingPageView(page: .assetManagement)
                 .previewDisplayName("Asset Management")
-            
+
             // Maintenance page
             OnboardingPageView(page: .maintenance)
                 .previewDisplayName("Maintenance")
-            
+
             // Reports page - Dark mode
             OnboardingPageView(page: .reports)
                 .preferredColorScheme(.dark)

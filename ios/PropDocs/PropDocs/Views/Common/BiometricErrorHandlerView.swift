@@ -5,8 +5,8 @@
 //  Created by Andrei Pop on 2025-08-06.
 //
 
-import SwiftUI
 import LocalAuthentication
+import SwiftUI
 
 struct BiometricErrorHandlerView: View {
     let error: BiometricAuthenticationError
@@ -14,18 +14,18 @@ struct BiometricErrorHandlerView: View {
     let onFallback: () -> Void
     let onCancel: () -> Void
     let onSetup: () -> Void
-    
+
     @State private var showingSetupGuidance = false
     @State private var animateError = false
-    
+
     var body: some View {
         VStack(spacing: 24) {
             // Error icon with animation
             errorIconView
-            
+
             // Error message
             errorMessageView
-            
+
             // Guidance and actions
             errorActionsView
         }
@@ -40,9 +40,9 @@ struct BiometricErrorHandlerView: View {
             }
         }
     }
-    
+
     // MARK: - Error Icon View
-    
+
     private var errorIconView: some View {
         ZStack {
             Circle()
@@ -50,7 +50,7 @@ struct BiometricErrorHandlerView: View {
                 .frame(width: 80, height: 80)
                 .scaleEffect(animateError ? 1.0 : 0.8)
                 .animation(.spring(response: 0.5, dampingFraction: 0.7), value: animateError)
-            
+
             Image(systemName: errorIcon)
                 .font(.system(size: 32, weight: .medium))
                 .foregroundColor(errorColor)
@@ -58,9 +58,9 @@ struct BiometricErrorHandlerView: View {
                 .animation(.spring(response: 0.6, dampingFraction: 0.8).delay(0.1), value: animateError)
         }
     }
-    
+
     // MARK: - Error Message View
-    
+
     private var errorMessageView: some View {
         VStack(spacing: 12) {
             Text(errorTitle)
@@ -70,7 +70,7 @@ struct BiometricErrorHandlerView: View {
                 .multilineTextAlignment(.center)
                 .opacity(animateError ? 1.0 : 0.0)
                 .animation(.easeInOut.delay(0.2), value: animateError)
-            
+
             Text(errorDescription)
                 .font(.body)
                 .foregroundColor(.secondary)
@@ -80,17 +80,17 @@ struct BiometricErrorHandlerView: View {
                 .animation(.easeInOut.delay(0.3), value: animateError)
         }
     }
-    
+
     // MARK: - Error Actions View
-    
+
     private var errorActionsView: some View {
         VStack(spacing: 16) {
             // Primary actions
             primaryActionButtons
-            
+
             // Secondary actions
             secondaryActionButtons
-            
+
             // Additional guidance
             if needsSetupGuidance {
                 setupGuidanceButton
@@ -99,7 +99,7 @@ struct BiometricErrorHandlerView: View {
         .opacity(animateError ? 1.0 : 0.0)
         .animation(.easeInOut.delay(0.4), value: animateError)
     }
-    
+
     private var primaryActionButtons: some View {
         VStack(spacing: 12) {
             ForEach(primaryActions, id: \.title) { action in
@@ -109,7 +109,7 @@ struct BiometricErrorHandlerView: View {
                             Image(systemName: icon)
                                 .font(.body)
                         }
-                        
+
                         Text(action.title)
                             .font(.headline)
                     }
@@ -123,7 +123,7 @@ struct BiometricErrorHandlerView: View {
             }
         }
     }
-    
+
     private var secondaryActionButtons: some View {
         HStack(spacing: 12) {
             ForEach(secondaryActions, id: \.title) { action in
@@ -133,7 +133,7 @@ struct BiometricErrorHandlerView: View {
                             Image(systemName: icon)
                                 .font(.caption)
                         }
-                        
+
                         Text(action.title)
                             .font(.body)
                     }
@@ -147,7 +147,7 @@ struct BiometricErrorHandlerView: View {
             }
         }
     }
-    
+
     private var setupGuidanceButton: some View {
         Button("Setup Guidance") {
             showingSetupGuidance = true
@@ -159,9 +159,9 @@ struct BiometricErrorHandlerView: View {
             BiometricSetupGuidanceView(error: error)
         }
     }
-    
+
     // MARK: - Computed Properties
-    
+
     private var errorTitle: String {
         switch error {
         case .biometryNotAvailable:
@@ -184,7 +184,7 @@ struct BiometricErrorHandlerView: View {
             return "Authentication Error"
         }
     }
-    
+
     private var errorDescription: String {
         switch error {
         case .biometryNotAvailable:
@@ -203,11 +203,11 @@ struct BiometricErrorHandlerView: View {
             return "Authentication was interrupted by the system. Please try again."
         case .passcodeNotSet:
             return "Please set up a device passcode in Settings to use biometric authentication."
-        case .unknown(let underlyingError):
+        case let .unknown(underlyingError):
             return "An unexpected error occurred: \(underlyingError.localizedDescription)"
         }
     }
-    
+
     private var errorIcon: String {
         switch error {
         case .biometryNotAvailable:
@@ -230,7 +230,7 @@ struct BiometricErrorHandlerView: View {
             return "questionmark.circle.fill"
         }
     }
-    
+
     private var errorColor: Color {
         switch error {
         case .biometryNotAvailable, .biometryNotEnrolled, .passcodeNotSet:
@@ -243,11 +243,11 @@ struct BiometricErrorHandlerView: View {
             return .blue
         }
     }
-    
+
     private var errorBackgroundColor: Color {
         errorColor.opacity(0.15)
     }
-    
+
     private var needsSetupGuidance: Bool {
         switch error {
         case .biometryNotEnrolled, .biometryNotAvailable, .passcodeNotSet:
@@ -256,54 +256,59 @@ struct BiometricErrorHandlerView: View {
             return false
         }
     }
-    
+
     // MARK: - Action Definitions
-    
+
     private var primaryActions: [ErrorAction] {
         switch error {
         case .authenticationFailed:
             return [
-                ErrorAction(title: "Try Again", icon: "arrow.clockwise", color: .blue, action: onRetry)
+                ErrorAction(title: "Try Again", icon: "arrow.clockwise", color: .blue, action: onRetry),
             ]
         case .biometryLockout:
             return [
-                ErrorAction(title: "Use Passcode", icon: "key", color: .green, action: onFallback)
+                ErrorAction(title: "Use Passcode", icon: "key", color: .green, action: onFallback),
             ]
         case .biometryNotEnrolled:
             return [
-                ErrorAction(title: "Set Up Biometrics", icon: "person.crop.circle.badge.plus", color: .blue, action: onSetup)
+                ErrorAction(
+                    title: "Set Up Biometrics",
+                    icon: "person.crop.circle.badge.plus",
+                    color: .blue,
+                    action: onSetup
+                ),
             ]
         case .userFallback:
             return [
-                ErrorAction(title: "Use Passcode", icon: "key", color: .blue, action: onFallback)
+                ErrorAction(title: "Use Passcode", icon: "key", color: .blue, action: onFallback),
             ]
         case .passcodeNotSet:
             return [
-                ErrorAction(title: "Open Settings", icon: "gear", color: .blue, action: openSettings)
+                ErrorAction(title: "Open Settings", icon: "gear", color: .blue, action: openSettings),
             ]
         default:
             return []
         }
     }
-    
+
     private var secondaryActions: [ErrorAction] {
         switch error {
         case .authenticationFailed:
             return [
                 ErrorAction(title: "Use Passcode", icon: "key", color: .green, action: onFallback),
-                ErrorAction(title: "Cancel", icon: nil, color: .gray, action: onCancel)
+                ErrorAction(title: "Cancel", icon: nil, color: .gray, action: onCancel),
             ]
         case .biometryNotEnrolled, .biometryNotAvailable:
             return [
-                ErrorAction(title: "Skip", icon: nil, color: .gray, action: onCancel)
+                ErrorAction(title: "Skip", icon: nil, color: .gray, action: onCancel),
             ]
         default:
             return [
-                ErrorAction(title: "Cancel", icon: nil, color: .gray, action: onCancel)
+                ErrorAction(title: "Cancel", icon: nil, color: .gray, action: onCancel),
             ]
         }
     }
-    
+
     private func openSettings() {
         if let settingsURL = URL(string: UIApplication.openSettingsURLString) {
             UIApplication.shared.open(settingsURL)
@@ -319,7 +324,7 @@ private struct ErrorAction {
     let color: Color
     let action: () -> Void
     let disabled: Bool
-    
+
     init(title: String, icon: String? = nil, color: Color, action: @escaping () -> Void, disabled: Bool = false) {
         self.title = title
         self.icon = icon
@@ -334,17 +339,17 @@ private struct ErrorAction {
 struct BiometricSetupGuidanceView: View {
     let error: BiometricAuthenticationError
     @Environment(\.dismiss) private var dismiss
-    
+
     var body: some View {
         NavigationView {
             ScrollView {
                 VStack(alignment: .leading, spacing: 24) {
                     // Header
                     setupHeaderView
-                    
+
                     // Step-by-step instructions
                     setupInstructionsView
-                    
+
                     // Additional tips
                     setupTipsView
                 }
@@ -362,25 +367,25 @@ struct BiometricSetupGuidanceView: View {
             }
         }
     }
-    
+
     private var setupHeaderView: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text(setupTitle)
                 .font(.title2)
                 .fontWeight(.semibold)
-            
+
             Text(setupDescription)
                 .font(.body)
                 .foregroundColor(.secondary)
         }
     }
-    
+
     private var setupInstructionsView: some View {
         VStack(alignment: .leading, spacing: 16) {
             Text("Setup Instructions")
                 .font(.headline)
                 .fontWeight(.semibold)
-            
+
             ForEach(Array(setupSteps.enumerated()), id: \.offset) { index, step in
                 HStack(alignment: .top, spacing: 12) {
                     Text("\(index + 1)")
@@ -389,7 +394,7 @@ struct BiometricSetupGuidanceView: View {
                         .foregroundColor(.white)
                         .frame(width: 24, height: 24)
                         .background(Circle().fill(Color.blue))
-                    
+
                     Text(step)
                         .font(.body)
                         .fixedSize(horizontal: false, vertical: true)
@@ -397,19 +402,19 @@ struct BiometricSetupGuidanceView: View {
             }
         }
     }
-    
+
     private var setupTipsView: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("Tips for Best Results")
                 .font(.headline)
                 .fontWeight(.semibold)
-            
+
             ForEach(setupTips, id: \.self) { tip in
                 HStack(alignment: .top, spacing: 8) {
                     Image(systemName: "lightbulb.fill")
                         .font(.caption)
                         .foregroundColor(.yellow)
-                    
+
                     Text(tip)
                         .font(.caption)
                         .foregroundColor(.secondary)
@@ -421,7 +426,7 @@ struct BiometricSetupGuidanceView: View {
         .background(Color(.secondarySystemGroupedBackground))
         .cornerRadius(12)
     }
-    
+
     private var setupTitle: String {
         switch error {
         case .biometryNotEnrolled:
@@ -432,7 +437,7 @@ struct BiometricSetupGuidanceView: View {
             return "Setup Required"
         }
     }
-    
+
     private var setupDescription: String {
         switch error {
         case .biometryNotEnrolled:
@@ -443,7 +448,7 @@ struct BiometricSetupGuidanceView: View {
             return "Complete the setup process to enable secure authentication."
         }
     }
-    
+
     private var setupSteps: [String] {
         switch error {
         case .biometryNotEnrolled:
@@ -453,7 +458,7 @@ struct BiometricSetupGuidanceView: View {
                 "Enter your device passcode when prompted",
                 "Tap 'Set Up Face ID' or 'Add a Fingerprint'",
                 "Follow the on-screen instructions to complete enrollment",
-                "Return to PropDocs and try again"
+                "Return to PropDocs and try again",
             ]
         case .passcodeNotSet:
             return [
@@ -462,13 +467,13 @@ struct BiometricSetupGuidanceView: View {
                 "Tap 'Turn Passcode On'",
                 "Choose a 6-digit passcode or tap 'Passcode Options' for other formats",
                 "Enter and confirm your new passcode",
-                "Return to PropDocs to set up biometric authentication"
+                "Return to PropDocs to set up biometric authentication",
             ]
         default:
             return ["Please check your device settings and try again"]
         }
     }
-    
+
     private var setupTips: [String] {
         switch error {
         case .biometryNotEnrolled:
@@ -476,12 +481,12 @@ struct BiometricSetupGuidanceView: View {
                 "Ensure your face or finger is clean and dry for better recognition",
                 "Hold the device at a comfortable distance during setup",
                 "Make sure you have good lighting when setting up Face ID",
-                "You can add multiple fingerprints for Touch ID"
+                "You can add multiple fingerprints for Touch ID",
             ]
         default:
             return [
                 "Choose a passcode that's secure but easy for you to remember",
-                "Avoid using common patterns or your birthday"
+                "Avoid using common patterns or your birthday",
             ]
         }
     }
@@ -495,7 +500,7 @@ struct BiometricErrorAlert: ViewModifier {
     let onRetry: () -> Void
     let onFallback: () -> Void
     let onSetup: () -> Void
-    
+
     func body(content: Content) -> some View {
         content
             .alert("Authentication Error", isPresented: $isPresented) {
@@ -504,15 +509,15 @@ struct BiometricErrorAlert: ViewModifier {
                     case .authenticationFailed:
                         Button("Try Again", action: onRetry)
                         Button("Use Passcode", action: onFallback)
-                        Button("Cancel", role: .cancel) { }
+                        Button("Cancel", role: .cancel) {}
                     case .biometryNotEnrolled:
                         Button("Set Up", action: onSetup)
-                        Button("Cancel", role: .cancel) { }
+                        Button("Cancel", role: .cancel) {}
                     case .biometryLockout:
                         Button("Use Passcode", action: onFallback)
-                        Button("Cancel", role: .cancel) { }
+                        Button("Cancel", role: .cancel) {}
                     default:
-                        Button("OK", role: .cancel) { }
+                        Button("OK", role: .cancel) {}
                     }
                 }
             } message: {
@@ -555,7 +560,7 @@ struct BiometricErrorHandlerView_Previews: PreviewProvider {
                 onSetup: {}
             )
             .previewDisplayName("Authentication Failed")
-            
+
             // Biometry not enrolled
             BiometricErrorHandlerView(
                 error: .biometryNotEnrolled,
@@ -565,7 +570,7 @@ struct BiometricErrorHandlerView_Previews: PreviewProvider {
                 onSetup: {}
             )
             .previewDisplayName("Setup Required")
-            
+
             // Biometry lockout
             BiometricErrorHandlerView(
                 error: .biometryLockout,

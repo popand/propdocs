@@ -10,49 +10,49 @@ import SwiftUI
 struct BiometricToggleView: View {
     @StateObject private var viewModel = BiometricViewModel()
     @State private var showingPolicySettings = false
-    
+
     var body: some View {
         VStack(spacing: 0) {
             // Main toggle section
             mainToggleSection
-            
+
             // Additional settings (when enabled)
             if viewModel.isEnabled {
                 additionalSettingsSection
             }
         }
     }
-    
+
     // MARK: - Main Toggle Section
-    
+
     private var mainToggleSection: some View {
         VStack(spacing: 16) {
             // Toggle row
             HStack(spacing: 16) {
                 // Biometric icon
                 biometricIconView
-                
+
                 // Title and description
                 VStack(alignment: .leading, spacing: 4) {
                     Text(biometricTitle)
                         .font(.body)
                         .fontWeight(.medium)
                         .foregroundColor(.primary)
-                    
+
                     Text(biometricDescription)
                         .font(.caption)
                         .foregroundColor(.secondary)
                         .fixedSize(horizontal: false, vertical: true)
                 }
-                
+
                 Spacer()
-                
+
                 // Toggle switch or action button
                 toggleControl
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 12)
-            
+
             // Status indicator
             if viewModel.isEnabled || viewModel.isLockedOut {
                 statusIndicator
@@ -62,19 +62,19 @@ struct BiometricToggleView: View {
         .background(Color(.secondarySystemGroupedBackground))
         .cornerRadius(12)
     }
-    
+
     private var biometricIconView: some View {
         ZStack {
             Circle()
                 .fill(iconBackgroundColor)
                 .frame(width: 40, height: 40)
-            
+
             Image(systemName: iconSystemName)
                 .font(.system(size: 20))
                 .foregroundColor(iconColor)
         }
     }
-    
+
     private var toggleControl: some View {
         Group {
             if viewModel.canUseBiometrics {
@@ -101,20 +101,20 @@ struct BiometricToggleView: View {
             }
         }
     }
-    
+
     private var statusIndicator: some View {
         HStack(spacing: 8) {
             Image(systemName: statusIcon)
                 .font(.caption)
                 .foregroundColor(statusColor)
-            
+
             Text(statusText)
                 .font(.caption)
                 .foregroundColor(statusColor)
-            
+
             Spacer()
-            
-            if viewModel.isLockedOut && viewModel.lockoutTimeRemaining != nil {
+
+            if viewModel.isLockedOut, viewModel.lockoutTimeRemaining != nil {
                 Text(viewModel.lockoutStatusText)
                     .font(.caption)
                     .foregroundColor(.orange)
@@ -125,22 +125,22 @@ struct BiometricToggleView: View {
         .background(statusBackgroundColor)
         .cornerRadius(8)
     }
-    
+
     // MARK: - Additional Settings Section
-    
+
     private var additionalSettingsSection: some View {
         VStack(spacing: 12) {
             Divider()
                 .padding(.horizontal, 16)
-            
+
             // Policy configuration
             policyConfigurationRow
-            
+
             // Last authentication info
             if let lastAuth = viewModel.lastAuthenticationDate {
                 lastAuthenticationRow(date: lastAuth)
             }
-            
+
             // Reset lockout button (if applicable)
             if viewModel.isLockedOut {
                 resetLockoutButton
@@ -149,7 +149,7 @@ struct BiometricToggleView: View {
         .padding(.vertical, 8)
         .background(Color(.secondarySystemGroupedBackground))
     }
-    
+
     private var policyConfigurationRow: some View {
         Button(action: {
             showingPolicySettings = true
@@ -158,19 +158,19 @@ struct BiometricToggleView: View {
                 Image(systemName: "gear")
                     .foregroundColor(.blue)
                     .frame(width: 20)
-                
+
                 VStack(alignment: .leading, spacing: 2) {
                     Text("Security Policy")
                         .font(.body)
                         .foregroundColor(.primary)
-                    
+
                     Text(policyDescriptionText)
                         .font(.caption)
                         .foregroundColor(.secondary)
                 }
-                
+
                 Spacer()
-                
+
                 Image(systemName: "chevron.right")
                     .font(.caption)
                     .foregroundColor(.secondary)
@@ -179,29 +179,29 @@ struct BiometricToggleView: View {
             .padding(.vertical, 8)
         }
     }
-    
+
     private func lastAuthenticationRow(date: Date) -> some View {
         HStack {
             Image(systemName: "clock")
                 .foregroundColor(.green)
                 .frame(width: 20)
-            
+
             VStack(alignment: .leading, spacing: 2) {
                 Text("Last Authentication")
                     .font(.body)
                     .foregroundColor(.primary)
-                
+
                 Text(formatDate(date))
                     .font(.caption)
                     .foregroundColor(.secondary)
             }
-            
+
             Spacer()
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 8)
     }
-    
+
     private var resetLockoutButton: some View {
         Button("Reset Lockout") {
             viewModel.resetLockout()
@@ -211,9 +211,9 @@ struct BiometricToggleView: View {
         .padding(.horizontal, 16)
         .padding(.vertical, 8)
     }
-    
+
     // MARK: - Computed Properties
-    
+
     private var biometricTitle: String {
         if viewModel.isAvailable {
             return viewModel.biometricType.displayName
@@ -221,7 +221,7 @@ struct BiometricToggleView: View {
             return "Biometric Authentication"
         }
     }
-    
+
     private var biometricDescription: String {
         if !viewModel.isAvailable {
             return "Not available on this device"
@@ -231,7 +231,7 @@ struct BiometricToggleView: View {
             return "Use \(viewModel.biometricType.displayName) for secure access"
         }
     }
-    
+
     private var iconSystemName: String {
         if viewModel.isAvailable {
             return viewModel.biometricType.icon
@@ -239,7 +239,7 @@ struct BiometricToggleView: View {
             return "faceid.fill"
         }
     }
-    
+
     private var iconColor: Color {
         if !viewModel.isAvailable {
             return .gray
@@ -249,7 +249,7 @@ struct BiometricToggleView: View {
             return .blue
         }
     }
-    
+
     private var iconBackgroundColor: Color {
         if !viewModel.isAvailable {
             return Color.gray.opacity(0.1)
@@ -259,7 +259,7 @@ struct BiometricToggleView: View {
             return Color.blue.opacity(0.1)
         }
     }
-    
+
     private var statusIcon: String {
         switch viewModel.authenticationStatus {
         case .authenticated:
@@ -272,7 +272,7 @@ struct BiometricToggleView: View {
             return "circle"
         }
     }
-    
+
     private var statusColor: Color {
         switch viewModel.authenticationStatus {
         case .authenticated:
@@ -285,11 +285,11 @@ struct BiometricToggleView: View {
             return .gray
         }
     }
-    
+
     private var statusBackgroundColor: Color {
         statusColor.opacity(0.1)
     }
-    
+
     private var statusText: String {
         switch viewModel.authenticationStatus {
         case .authenticated:
@@ -302,7 +302,7 @@ struct BiometricToggleView: View {
             return "Not configured"
         }
     }
-    
+
     private var policyDescriptionText: String {
         let config = viewModel.policyConfiguration
         if config.requireBiometrics {
@@ -313,9 +313,9 @@ struct BiometricToggleView: View {
             return "Custom security policy"
         }
     }
-    
+
     // MARK: - Helper Methods
-    
+
     private func formatDate(_ date: Date) -> String {
         let formatter = RelativeDateTimeFormatter()
         formatter.dateTimeStyle = .named
@@ -328,14 +328,14 @@ struct BiometricToggleView: View {
 struct BiometricPolicySettingsView: View {
     @ObservedObject var viewModel: BiometricViewModel
     @Environment(\.dismiss) private var dismiss
-    
+
     @State private var selectedPolicy: PolicyOption = .default
-    
+
     private enum PolicyOption: String, CaseIterable {
         case relaxed = "Relaxed"
         case `default` = "Standard"
         case strict = "Strict"
-        
+
         var description: String {
             switch self {
             case .relaxed:
@@ -346,7 +346,7 @@ struct BiometricPolicySettingsView: View {
                 return "Requires biometrics, shorter timeouts"
             }
         }
-        
+
         var configuration: BiometricPolicyConfiguration {
             switch self {
             case .relaxed:
@@ -358,7 +358,7 @@ struct BiometricPolicySettingsView: View {
             }
         }
     }
-    
+
     var body: some View {
         NavigationView {
             List {
@@ -369,15 +369,15 @@ struct BiometricPolicySettingsView: View {
                                 Text(option.rawValue)
                                     .font(.body)
                                     .fontWeight(.medium)
-                                
+
                                 Spacer()
-                                
+
                                 if selectedPolicy == option {
                                     Image(systemName: "checkmark.circle.fill")
                                         .foregroundColor(.blue)
                                 }
                             }
-                            
+
                             Text(option.description)
                                 .font(.caption)
                                 .foregroundColor(.secondary)
@@ -401,7 +401,7 @@ struct BiometricPolicySettingsView: View {
                         dismiss()
                     }
                 }
-                
+
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Save") {
                         viewModel.setPolicyConfiguration(selectedPolicy.configuration)
@@ -414,9 +414,9 @@ struct BiometricPolicySettingsView: View {
         .onAppear {
             // Set current policy as selected
             let current = viewModel.policyConfiguration
-            if current.requireBiometrics && !current.allowFallback {
+            if current.requireBiometrics, !current.allowFallback {
                 selectedPolicy = .strict
-            } else if current.allowFallback && current.maxAttempts > 3 {
+            } else if current.allowFallback, current.maxAttempts > 3 {
                 selectedPolicy = .relaxed
             } else {
                 selectedPolicy = .default
@@ -449,7 +449,7 @@ struct BiometricToggleView_Previews: PreviewProvider {
                 BiometricSettingsSection()
             }
             .previewDisplayName("Settings Integration")
-            
+
             // Individual toggle
             VStack {
                 BiometricToggleView()
@@ -458,7 +458,7 @@ struct BiometricToggleView_Previews: PreviewProvider {
             .padding()
             .background(Color(.systemGroupedBackground))
             .previewDisplayName("Standalone Toggle")
-            
+
             // Dark mode
             List {
                 BiometricSettingsSection()

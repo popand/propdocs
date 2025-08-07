@@ -5,35 +5,35 @@
 //  Created by Andrei Pop on 2025-08-06.
 //
 
-import SwiftUI
 import LocalAuthentication
+import SwiftUI
 
 struct BiometricSetupView: View {
     @StateObject private var biometricManager = BiometricAuthenticationManager.shared
     @StateObject private var viewModel = BiometricSetupViewModel()
-    
+
     // Navigation and state
     @Environment(\.dismiss) private var dismiss
     @Binding var isPresented: Bool
-    
+
     // Animation states
     @State private var showSuccessAnimation = false
     @State private var showErrorAnimation = false
-    
+
     var body: some View {
         NavigationView {
             VStack(spacing: 32) {
                 // Header Section
                 headerSection
-                
+
                 // Status Section
                 statusSection
-                
+
                 // Action Section
                 actionSection
-                
+
                 Spacer()
-                
+
                 // Footer Section
                 footerSection
             }
@@ -49,7 +49,7 @@ struct BiometricSetupView: View {
                     }
                     .foregroundColor(.secondary)
                 }
-                
+
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Done") {
                         isPresented = false
@@ -73,9 +73,9 @@ struct BiometricSetupView: View {
             biometricManager.updateBiometricAvailability()
         }
     }
-    
+
     // MARK: - Header Section
-    
+
     private var headerSection: some View {
         VStack(spacing: 16) {
             // Biometric icon with animation
@@ -85,13 +85,13 @@ struct BiometricSetupView: View {
                     .frame(width: 120, height: 120)
                     .scaleEffect(showSuccessAnimation ? 1.1 : 1.0)
                     .animation(.spring(response: 0.5, dampingFraction: 0.6), value: showSuccessAnimation)
-                
+
                 biometricManager.biometricIcon
                     .font(.system(size: 50))
                     .foregroundColor(biometricIconColor)
                     .scaleEffect(showSuccessAnimation ? 1.2 : 1.0)
                     .animation(.spring(response: 0.5, dampingFraction: 0.6), value: showSuccessAnimation)
-                
+
                 // Success checkmark overlay
                 if showSuccessAnimation {
                     Image(systemName: "checkmark")
@@ -101,14 +101,14 @@ struct BiometricSetupView: View {
                 }
             }
             .animation(.easeInOut(duration: 0.3), value: showSuccessAnimation)
-            
+
             // Title and subtitle
             VStack(spacing: 8) {
                 Text(headerTitle)
                     .font(.title2)
                     .fontWeight(.semibold)
                     .multilineTextAlignment(.center)
-                
+
                 Text(headerSubtitle)
                     .font(.body)
                     .foregroundColor(.secondary)
@@ -116,9 +116,9 @@ struct BiometricSetupView: View {
             }
         }
     }
-    
+
     // MARK: - Status Section
-    
+
     private var statusSection: some View {
         VStack(spacing: 16) {
             // Current status indicator
@@ -126,42 +126,42 @@ struct BiometricSetupView: View {
                 Image(systemName: statusIcon)
                     .foregroundColor(statusColor)
                     .font(.title3)
-                
+
                 Text(biometricManager.biometricStatusDescription)
                     .font(.body)
                     .foregroundColor(.primary)
-                
+
                 Spacer()
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 12)
             .background(statusBackgroundColor)
             .cornerRadius(12)
-            
+
             // Benefits list
             if biometricManager.canUseBiometrics {
                 benefitsList
             }
         }
     }
-    
+
     private var benefitsList: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("Benefits of Biometric Authentication:")
                 .font(.headline)
                 .foregroundColor(.primary)
-            
+
             ForEach(biometricBenefits, id: \.self) { benefit in
                 HStack(alignment: .top, spacing: 12) {
                     Image(systemName: "checkmark.circle.fill")
                         .foregroundColor(.green)
                         .font(.system(size: 16))
-                    
+
                     Text(benefit)
                         .font(.body)
                         .foregroundColor(.secondary)
                         .fixedSize(horizontal: false, vertical: true)
-                    
+
                     Spacer()
                 }
             }
@@ -170,9 +170,9 @@ struct BiometricSetupView: View {
         .background(Color(.secondarySystemGroupedBackground))
         .cornerRadius(12)
     }
-    
+
     // MARK: - Action Section
-    
+
     private var actionSection: some View {
         VStack(spacing: 16) {
             if biometricManager.canUseBiometrics {
@@ -191,8 +191,10 @@ struct BiometricSetupView: View {
                             Image(systemName: biometricManager.biometricType.icon)
                                 .font(.title3)
                         }
-                        
-                        Text(biometricManager.isEnabled ? "Biometric Authentication Enabled" : "Enable \(biometricManager.biometricType.displayName)")
+
+                        Text(biometricManager
+                            .isEnabled ? "Biometric Authentication Enabled" :
+                            "Enable \(biometricManager.biometricType.displayName)")
                             .font(.headline)
                     }
                     .foregroundColor(.white)
@@ -202,7 +204,7 @@ struct BiometricSetupView: View {
                     .cornerRadius(12)
                 }
                 .disabled(viewModel.isLoading || biometricManager.isEnabled)
-                
+
                 // Disable button (if already enabled)
                 if biometricManager.isEnabled {
                     Button("Disable Biometric Authentication") {
@@ -211,25 +213,25 @@ struct BiometricSetupView: View {
                     .foregroundColor(.red)
                     .font(.body)
                 }
-                
+
             } else {
                 // Setup guidance for unavailable biometrics
                 setupGuidanceView
             }
         }
     }
-    
+
     private var setupGuidanceView: some View {
         VStack(spacing: 16) {
             Text("Setup Required")
                 .font(.headline)
                 .foregroundColor(.primary)
-            
+
             Text(biometricManager.getBiometricSetupGuidance())
                 .font(.body)
                 .foregroundColor(.secondary)
                 .multilineTextAlignment(.center)
-            
+
             Button("Open Settings") {
                 openSettings()
             }
@@ -248,16 +250,16 @@ struct BiometricSetupView: View {
                 .stroke(Color(.separator), lineWidth: 1)
         )
     }
-    
+
     // MARK: - Footer Section
-    
+
     private var footerSection: some View {
         VStack(spacing: 12) {
             Text("You can change this setting later in your account preferences.")
                 .font(.caption)
                 .foregroundColor(.secondary)
                 .multilineTextAlignment(.center)
-            
+
             if !biometricManager.canUseBiometrics {
                 Text("PropDocs will continue to work securely with your device passcode.")
                     .font(.caption)
@@ -266,9 +268,9 @@ struct BiometricSetupView: View {
             }
         }
     }
-    
+
     // MARK: - Computed Properties
-    
+
     private var headerTitle: String {
         if biometricManager.isEnabled {
             return "\(biometricManager.biometricType.displayName) Enabled"
@@ -278,7 +280,7 @@ struct BiometricSetupView: View {
             return "Biometric Setup"
         }
     }
-    
+
     private var headerSubtitle: String {
         if biometricManager.isEnabled {
             return "Your account is secured with \(biometricManager.biometricType.displayName)"
@@ -288,7 +290,7 @@ struct BiometricSetupView: View {
             return "Set up biometric authentication for enhanced security"
         }
     }
-    
+
     private var statusIcon: String {
         if biometricManager.isEnabled {
             return "checkmark.shield.fill"
@@ -298,7 +300,7 @@ struct BiometricSetupView: View {
             return "exclamationmark.triangle"
         }
     }
-    
+
     private var statusColor: Color {
         if biometricManager.isEnabled {
             return .green
@@ -308,7 +310,7 @@ struct BiometricSetupView: View {
             return .orange
         }
     }
-    
+
     private var statusBackgroundColor: Color {
         if biometricManager.isEnabled {
             return Color.green.opacity(0.1)
@@ -318,7 +320,7 @@ struct BiometricSetupView: View {
             return Color.orange.opacity(0.1)
         }
     }
-    
+
     private var biometricIconBackgroundColor: Color {
         if biometricManager.isEnabled {
             return Color.green.opacity(0.2)
@@ -328,7 +330,7 @@ struct BiometricSetupView: View {
             return Color.gray.opacity(0.2)
         }
     }
-    
+
     private var biometricIconColor: Color {
         if biometricManager.isEnabled {
             return .green
@@ -338,26 +340,26 @@ struct BiometricSetupView: View {
             return .gray
         }
     }
-    
+
     private var biometricBenefits: [String] {
         [
             "Quick access to your property information",
             "Enhanced security for sensitive data",
             "No need to remember passwords",
-            "Works even when offline"
+            "Works even when offline",
         ]
     }
-    
+
     // MARK: - Actions
-    
+
     private func enableBiometricAuthentication() async {
         await viewModel.enableBiometric()
-        
+
         if biometricManager.isEnabled {
             withAnimation(.spring()) {
                 showSuccessAnimation = true
             }
-            
+
             DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                 withAnimation(.easeInOut) {
                     showSuccessAnimation = false
@@ -365,15 +367,15 @@ struct BiometricSetupView: View {
             }
         }
     }
-    
+
     private func disableBiometricAuthentication() {
         biometricManager.disableBiometricAuthentication()
-        
+
         withAnimation(.easeInOut) {
             showSuccessAnimation = false
         }
     }
-    
+
     private func openSettings() {
         if let settingsURL = URL(string: UIApplication.openSettingsURLString) {
             UIApplication.shared.open(settingsURL)
@@ -388,21 +390,21 @@ class BiometricSetupViewModel: ObservableObject {
     @Published var isLoading = false
     @Published var showError = false
     @Published var errorMessage = ""
-    
+
     private let biometricManager = BiometricAuthenticationManager.shared
-    
+
     func enableBiometric() async {
         isLoading = true
-        
+
         let result = await biometricManager.enableBiometricAuthentication()
-        
+
         isLoading = false
-        
+
         switch result {
         case .success:
             // Success handled by the manager
             break
-        case .failure(let error):
+        case let .failure(error):
             errorMessage = error.localizedDescription
             showError = true
         }
@@ -417,7 +419,7 @@ struct BiometricSetupView_Previews: PreviewProvider {
             // Available but not enabled
             BiometricSetupView(isPresented: .constant(true))
                 .previewDisplayName("Available - Not Enabled")
-            
+
             // Enabled state
             BiometricSetupView(isPresented: .constant(true))
                 .onAppear {
@@ -426,7 +428,7 @@ struct BiometricSetupView_Previews: PreviewProvider {
                     BiometricAuthenticationManager.shared.biometricType = .faceID
                 }
                 .previewDisplayName("Enabled State")
-            
+
             // Dark mode
             BiometricSetupView(isPresented: .constant(true))
                 .preferredColorScheme(.dark)

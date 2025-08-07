@@ -5,16 +5,15 @@
 //  Created by Andrei Pop on 2025-08-06.
 //
 
-import Foundation
-import SwiftUI
 import Combine
+import Foundation
 import LocalAuthentication
+import SwiftUI
 
 @MainActor
 class BiometricViewModel: ObservableObject {
-    
     // MARK: - Published Properties
-    
+
     @Published var isEnabled: Bool = false
     @Published var isAvailable: Bool = false
     @Published var biometricType: BiometricType = .none
@@ -26,59 +25,59 @@ class BiometricViewModel: ObservableObject {
     @Published var lockoutTimeRemaining: TimeInterval?
     @Published var failedAttempts: Int = 0
     @Published var policyConfiguration: BiometricPolicyConfiguration = .default
-    
+
     // Authentication flow states
     @Published var showBiometricSetup: Bool = false
     @Published var showFallbackAuthentication: Bool = false
     @Published var requiresAuthentication: Bool = false
-    
+
     // MARK: - Dependencies
-    
+
     private let biometricManager: BiometricAuthenticationManager
     private var cancellables = Set<AnyCancellable>()
-    
+
     // MARK: - Initialization
-    
+
     init(biometricManager: BiometricAuthenticationManager = BiometricAuthenticationManager.shared) {
         self.biometricManager = biometricManager
         setupObservers()
         updateState()
     }
-    
+
     // MARK: - Setup
-    
+
     private func setupObservers() {
         // Observe biometric manager state changes
         biometricManager.$isEnabled
             .receive(on: DispatchQueue.main)
             .assign(to: \.isEnabled, on: self)
             .store(in: &cancellables)
-        
+
         biometricManager.$isAvailable
             .receive(on: DispatchQueue.main)
             .assign(to: \.isAvailable, on: self)
             .store(in: &cancellables)
-        
+
         biometricManager.$biometricType
             .receive(on: DispatchQueue.main)
             .assign(to: \.biometricType, on: self)
             .store(in: &cancellables)
-        
+
         biometricManager.$lastAuthenticationDate
             .receive(on: DispatchQueue.main)
             .assign(to: \.lastAuthenticationDate, on: self)
             .store(in: &cancellables)
-        
+
         biometricManager.$failedAttempts
             .receive(on: DispatchQueue.main)
             .assign(to: \.failedAttempts, on: self)
             .store(in: &cancellables)
-        
+
         biometricManager.$policyConfiguration
             .receive(on: DispatchQueue.main)
             .assign(to: \.policyConfiguration, on: self)
             .store(in: &cancellables)
-        
+
         // Update lockout time remaining periodically
         Timer.publish(every: 1.0, on: .main, in: .common)
             .autoconnect()
@@ -86,7 +85,7 @@ class BiometricViewModel: ObservableObject {
                 self?.updateLockoutTimeRemaining()
             }
             .store(in: &cancellables)
-        
+
         // Update authentication status based on state changes
         Publishers.CombineLatest3(
             biometricManager.$isEnabled,
@@ -99,13 +98,13 @@ class BiometricViewModel: ObservableObject {
         }
         .store(in: &cancellables)
     }
-    
+
     private func updateState() {
         biometricManager.updateBiometricAvailability()
         updateAuthenticationStatus()
         updateLockoutTimeRemaining()
     }
-    
+
     private func updateAuthenticationStatus() {
         if biometricManager.isLockedOut {
             authenticationStatus = .lockedOut
@@ -117,102 +116,102 @@ class BiometricViewModel: ObservableObject {
             authenticationStatus = .notAuthenticated
         }
     }
-    
+
     private func updateLockoutTimeRemaining() {
         lockoutTimeRemaining = biometricManager.lockoutTimeRemaining
     }
-    
+
     // MARK: - Authentication Actions
-    
+
     func authenticate(reason: String = "Authenticate to access PropDocs") async {
         isLoading = true
         errorMessage = ""
         showError = false
-        
+
         let result = await biometricManager.authenticate(reason: reason)
-        
+
         switch result {
         case .success:
             authenticationStatus = .authenticated
-        case .failure(let error):
+        case let .failure(error):
             await handleAuthenticationError(error, reason: reason)
         }
-        
+
         isLoading = false
     }
-    
+
     func enableBiometricAuthentication() async -> Bool {
         isLoading = true
         errorMessage = ""
         showError = false
-        
+
         let result = await biometricManager.enableBiometricAuthentication()
-        
+
         isLoading = false
-        
+
         switch result {
         case .success:
             return true
-        case .failure(let error):
+        case let .failure(error):
             await handleAuthenticationError(error)
             return false
         }
     }
-    
+
     func disableBiometricAuthentication() {
         biometricManager.disableBiometricAuthentication()
         authenticationStatus = .notAuthenticated
     }
-    
+
     func resetLockout() {
         biometricManager.resetLockout()
         updateAuthenticationStatus()
     }
-    
+
     // MARK: - Policy Management
-    
+
     func setPolicyConfiguration(_ configuration: BiometricPolicyConfiguration) {
         biometricManager.setPolicyConfiguration(configuration)
     }
-    
+
     func setStrictPolicy() {
         setPolicyConfiguration(.strict)
     }
-    
+
     func setRelaxedPolicy() {
         setPolicyConfiguration(.relaxed)
     }
-    
+
     func setDefaultPolicy() {
         setPolicyConfiguration(.default)
     }
-    
+
     // MARK: - UI Actions
-    
+
     func presentBiometricSetup() {
         showBiometricSetup = true
     }
-    
+
     func dismissBiometricSetup() {
         showBiometricSetup = false
     }
-    
+
     func presentFallbackAuthentication() {
         showFallbackAuthentication = true
     }
-    
+
     func dismissFallbackAuthentication() {
         showFallbackAuthentication = false
     }
-    
+
     func dismissError() {
         showError = false
         errorMessage = ""
     }
-    
+
     // MARK: - Error Handling
-    
-    private func handleAuthenticationError(_ error: BiometricAuthenticationError, reason: String? = nil) async {
+
+    private func handleAuthenticationError(_ error: BiometricAuthenticationError, reason _: String? = nil) async {
         switch error {
         case .userCancel, .systemCancel:
             // User cancelled, don't show error but might need fallback
@@ -248,44 +247,44 @@ class BiometricViewModel: ObservableObject {
             errorMessage = error.localizedDescription
             showError = true
         }
-        
+
         authenticationStatus = .requiresAuthentication
     }
-    
-    private func shouldShowFallback(after error: BiometricAuthenticationError) -> Bool {
-        return policyConfiguration.allowFallback && 
-               !biometricManager.isLockedOut &&
-               failedAttempts < policyConfiguration.maxAttempts
+
+    private func shouldShowFallback(after _: BiometricAuthenticationError) -> Bool {
+        policyConfiguration.allowFallback &&
+            !biometricManager.isLockedOut &&
+            failedAttempts < policyConfiguration.maxAttempts
     }
-    
+
     // MARK: - Computed Properties
-    
+
     var canUseBiometrics: Bool {
-        return biometricManager.canUseBiometrics
+        biometricManager.canUseBiometrics
     }
-    
+
     var isLockedOut: Bool {
-        return biometricManager.isLockedOut
+        biometricManager.isLockedOut
     }
-    
+
     var isRecentlyAuthenticated: Bool {
         guard let lastAuth = lastAuthenticationDate else { return false }
         return Date().timeIntervalSince(lastAuth) < 300 // 5 minutes
     }
-    
+
     var biometricStatusDescription: String {
-        return biometricManager.biometricStatusDescription
+        biometricManager.biometricStatusDescription
     }
-    
+
     var setupGuidanceText: String {
-        return biometricManager.getBiometricSetupGuidance()
+        biometricManager.getBiometricSetupGuidance()
     }
-    
+
     var lockoutStatusText: String {
         if let timeRemaining = lockoutTimeRemaining {
             let minutes = Int(timeRemaining / 60)
             let seconds = Int(timeRemaining.truncatingRemainder(dividingBy: 60))
-            
+
             if minutes > 0 {
                 return "Locked out for \(minutes)m \(seconds)s"
             } else {
@@ -294,7 +293,7 @@ class BiometricViewModel: ObservableObject {
         }
         return "Not locked out"
     }
-    
+
     var authenticationButtonTitle: String {
         switch authenticationStatus {
         case .notAuthenticated:
@@ -307,7 +306,7 @@ class BiometricViewModel: ObservableObject {
             return "Locked Out"
         }
     }
-    
+
     var authenticationButtonColor: Color {
         switch authenticationStatus {
         case .notAuthenticated:
@@ -320,29 +319,29 @@ class BiometricViewModel: ObservableObject {
             return .red
         }
     }
-    
+
     var canAuthenticate: Bool {
-        return !isLoading && 
-               isAvailable && 
-               !isLockedOut && 
-               authenticationStatus != .authenticated
+        !isLoading &&
+            isAvailable &&
+            !isLockedOut &&
+            authenticationStatus != .authenticated
     }
-    
+
     // MARK: - Helper Methods
-    
+
     func refreshAvailability() {
         biometricManager.updateBiometricAvailability()
         updateState()
     }
-    
+
     func simulateLockout() {
         // For testing purposes only
         #if DEBUG
-        biometricManager.lockoutEndTime = Date().addingTimeInterval(60) // 1 minute lockout
-        updateAuthenticationStatus()
+            biometricManager.lockoutEndTime = Date().addingTimeInterval(60) // 1 minute lockout
+            updateAuthenticationStatus()
         #endif
     }
-    
+
     func clearAuthentication() {
         authenticationStatus = .requiresAuthentication
     }
@@ -355,7 +354,7 @@ enum BiometricAuthenticationStatus: Equatable {
     case requiresAuthentication
     case authenticated
     case lockedOut
-    
+
     var description: String {
         switch self {
         case .notAuthenticated:
@@ -368,7 +367,7 @@ enum BiometricAuthenticationStatus: Equatable {
             return "Locked Out"
         }
     }
-    
+
     var systemImage: String {
         switch self {
         case .notAuthenticated:
@@ -386,12 +385,11 @@ enum BiometricAuthenticationStatus: Equatable {
 // MARK: - Preview Helpers
 
 extension BiometricViewModel {
-    
     static var preview: BiometricViewModel {
         let viewModel = BiometricViewModel()
         return viewModel
     }
-    
+
     static var previewEnabled: BiometricViewModel {
         let viewModel = BiometricViewModel()
         viewModel.isEnabled = true
@@ -400,7 +398,7 @@ extension BiometricViewModel {
         viewModel.authenticationStatus = .authenticated
         return viewModel
     }
-    
+
     static var previewLockedOut: BiometricViewModel {
         let viewModel = BiometricViewModel()
         viewModel.isEnabled = true

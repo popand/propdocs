@@ -35,16 +35,15 @@ struct BackendUser {
 // MARK: - Authentication Repository Implementation
 
 class AuthenticationRepository: AuthenticationRepositoryProtocol {
-    
     private let apiClient: APIClient
     private let keychainManager = KeychainManager.shared
-    
+
     init(apiClient: APIClient = APIClient.shared) {
         self.apiClient = apiClient
     }
-    
+
     // MARK: - Backend Token Exchange
-    
+
     func exchangeTokenWithBackend(_ authResult: AuthenticationResult) async throws -> BackendAuthenticationResult {
         let request = ExchangeTokenRequest(
             provider: authResult.user.provider.rawValue,
@@ -56,13 +55,13 @@ class AuthenticationRepository: AuthenticationRepositoryProtocol {
                 profileImageURL: authResult.user.profileImageURL
             )
         )
-        
+
         let response = try await apiClient.post(
             endpoint: .exchangeAuthToken,
             body: request,
             responseType: ExchangeTokenResponse.self
         )
-        
+
         let backendResult = BackendAuthenticationResult(
             accessToken: response.accessToken,
             refreshToken: response.refreshToken,
@@ -76,29 +75,29 @@ class AuthenticationRepository: AuthenticationRepositoryProtocol {
                 updatedAt: response.user.updatedAt
             )
         )
-        
+
         // Store backend tokens
         _ = keychainManager.saveTokens(
             accessToken: backendResult.accessToken,
             refreshToken: backendResult.refreshToken
         )
-        
+
         return backendResult
     }
-    
+
     func refreshBackendToken() async throws -> BackendAuthenticationResult {
         guard let refreshToken = keychainManager.refreshToken else {
             throw AuthenticationError.invalidCredentials
         }
-        
+
         let request = RefreshTokenRequest(refreshToken: refreshToken)
-        
+
         let response = try await apiClient.post(
             endpoint: .refreshToken,
             body: request,
             responseType: RefreshTokenResponse.self
         )
-        
+
         let backendResult = BackendAuthenticationResult(
             accessToken: response.accessToken,
             refreshToken: response.refreshToken,
@@ -112,46 +111,46 @@ class AuthenticationRepository: AuthenticationRepositoryProtocol {
                 updatedAt: response.user.updatedAt
             )
         )
-        
+
         // Update stored tokens
         _ = keychainManager.saveTokens(
             accessToken: backendResult.accessToken,
             refreshToken: backendResult.refreshToken
         )
-        
+
         return backendResult
     }
-    
+
     func invalidateBackendSession() async throws {
         guard keychainManager.accessToken != nil else {
             return // Already signed out
         }
-        
+
         let request = SignOutRequest()
-        
+
         _ = try await apiClient.post(
             endpoint: .signOut,
             body: request,
             responseType: EmptyResponse.self,
             requiresAuth: true
         )
-        
+
         // Clear stored tokens
         _ = keychainManager.clearTokens()
     }
-    
+
     func validateTokenWithBackend() async throws -> Bool {
         guard keychainManager.accessToken != nil else {
             return false
         }
-        
+
         do {
             let response = try await apiClient.get(
                 endpoint: .validateToken,
                 responseType: ValidateTokenResponse.self,
                 requiresAuth: true
             )
-            
+
             return response.isValid
         } catch {
             return false
@@ -165,7 +164,7 @@ private struct ExchangeTokenRequest: Codable {
     let provider: String
     let idToken: String
     let user: UserInfo
-    
+
     struct UserInfo: Codable {
         let id: String
         let email: String?
@@ -179,7 +178,7 @@ private struct ExchangeTokenResponse: Codable {
     let refreshToken: String
     let expiresIn: TimeInterval
     let user: UserResponse
-    
+
     struct UserResponse: Codable {
         let id: String
         let email: String
@@ -210,7 +209,6 @@ private struct ValidateTokenResponse: Codable {
     let expiresAt: Date?
 }
 
-
 // MARK: - API Endpoints Extension
 
 extension APIEndpoint {
@@ -223,7 +221,6 @@ extension APIEndpoint {
 // MARK: - Error Handling Extension
 
 extension AuthenticationRepository {
-    
     private func handleAPIError(_ error: Error) -> AuthenticationError {
         if let apiError = error as? APIError {
             switch apiError {
@@ -231,13 +228,13 @@ extension AuthenticationRepository {
                 return .invalidCredentials
             case .networkError:
                 return .networkError
-            case .serverError(let message):
+            case let .serverError(message):
                 return .failed(message)
             default:
                 return .unknown
             }
         }
-        
+
         return .failed(error.localizedDescription)
     }
 }
