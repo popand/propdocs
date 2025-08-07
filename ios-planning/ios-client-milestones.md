@@ -68,14 +68,14 @@ This document outlines the iOS client development milestones focused exclusively
 - [x] Add accessibility labels and VoiceOver support for all onboarding elements
 
 **Permissions Management:**
-- [ ] Create PermissionsManager.swift to handle all app permissions
-- [ ] Implement PermissionsRequestView.swift with clear permission explanations
-- [ ] Add camera permission request with usage description
-- [ ] Setup photo library access permission with PHPhotoLibrary
-- [ ] Implement notification permission request using UserNotifications
-- [ ] Create permission status checking and re-request flows
-- [ ] Add permission denied handling with settings app navigation
-- [ ] Build PermissionsViewModel.swift with @Published permission states
+- [x] Create PermissionsManager.swift to handle all app permissions
+- [x] Implement PermissionsRequestView.swift with clear permission explanations
+- [x] Add camera permission request with usage description
+- [x] Setup photo library access permission with PHPhotoLibrary
+- [x] Implement notification permission request using UserNotifications
+- [x] Create permission status checking and re-request flows
+- [x] Add permission denied handling with settings app navigation
+- [x] Build PermissionsViewModel.swift with @Published permission states
 
 ---
 
