@@ -100,14 +100,14 @@ This document outlines the iOS client development milestones focused exclusively
 **Implementation Tasks**:
 
 **Property Setup Infrastructure:**
-- [ ] Create Property.swift model with Core Data entity mapping
-- [ ] Implement PropertyRepository.swift with CRUD operations
-- [ ] Build PropertyViewModel.swift with @Published property state
-- [ ] Setup PropertyType enum (house, condo, apartment, commercial)
-- [ ] Create PropertyAddress.swift model with validation logic
-- [ ] Implement property photo upload service with compression
-- [ ] Add property creation form validation and error handling
-- [ ] Setup multi-property support with active property switching
+- [x] Create Property.swift model with Core Data entity mapping
+- [x] Implement PropertyRepository.swift with CRUD operations
+- [x] Build PropertyViewModel.swift with @Published property state
+- [x] Setup PropertyType enum (house, condo, apartment, commercial)
+- [x] Create PropertyAddress.swift model with validation logic
+- [x] Implement property photo upload service with compression
+- [x] Add property creation form validation and error handling
+- [x] Setup multi-property support with active property switching
 
 **Address Autocomplete Implementation:**
 - [ ] Create AddressAutocompleteManager.swift using MapKit MKLocalSearchCompleter
