@@ -28,6 +28,18 @@
             margin-bottom: var(--spacing-xl);
         }
         
+        .loading-logo-complete {
+            width: 320px;
+            height: 80px;
+            filter: brightness(0) invert(1); /* Make logo white */
+            animation: pulse 2s ease-in-out infinite;
+            background-image: url('./logo.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+        
+        /* Legacy styles for backwards compatibility */
         .loading-logo .app-logo-icon {
             width: 120px;
             height: 120px;
@@ -136,10 +148,7 @@
         <!-- Primary Loading State -->
         <div class="loading-container" id="primary-loading">
             <div class="loading-logo">
-                <div class="app-logo-xl">
-                    <div class="app-logo-icon"></div>
-                </div>
-                <div class="app-logo-text">PropDocs</div>
+                <div class="loading-logo-complete"></div>
             </div>
             
             <div class="loading-subtitle">Property Management Made Simple</div>
@@ -155,10 +164,7 @@
         
         <!-- Minimal Loading State -->
         <div class="minimal-loading hidden" id="minimal-loading">
-            <div class="app-logo-large">
-                <div class="app-logo-icon"></div>
-                <div class="app-logo-text">PropDocs</div>
-            </div>
+            <div class="app-logo-complete app-logo-complete-medium"></div>
         </div>
     </div>
     

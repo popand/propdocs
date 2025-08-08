@@ -233,6 +233,36 @@ body {
   letter-spacing: -0.5px;
 }
 
+/* Complete Logo Image Classes */
+.app-logo-complete {
+  background-image: url('./logo.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  flex-shrink: 0;
+}
+
+.app-logo-complete-nav {
+  width: 120px;
+  height: 28px;
+}
+
+.app-logo-complete-medium {
+  width: 200px;
+  height: 48px;
+}
+
+.app-logo-complete-large {
+  width: 300px;
+  height: 72px;
+}
+
+.app-logo-complete-xl {
+  width: 400px;
+  height: 96px;
+}
+
+/* Legacy classes for backwards compatibility */
 .app-logo-large {
   display: flex;
   align-items: center;
