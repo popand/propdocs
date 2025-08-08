@@ -209,6 +209,64 @@ body {
 .text-orange { color: var(--ios-orange); }
 .text-red { color: var(--ios-red); }
 
+/* Logo Components */
+.app-logo {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.app-logo-icon {
+  width: 28px;
+  height: 28px;
+  background-image: url('./logo.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  flex-shrink: 0;
+}
+
+.app-logo-text {
+  font-size: var(--text-headline);
+  font-weight: var(--font-weight-semibold);
+  color: var(--label-primary);
+  letter-spacing: -0.5px;
+}
+
+.app-logo-large {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  justify-content: center;
+}
+
+.app-logo-large .app-logo-icon {
+  width: 48px;
+  height: 48px;
+}
+
+.app-logo-large .app-logo-text {
+  font-size: var(--text-title-1);
+  font-weight: var(--font-weight-bold);
+}
+
+.app-logo-xl {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-lg);
+  justify-content: center;
+}
+
+.app-logo-xl .app-logo-icon {
+  width: 80px;
+  height: 80px;
+}
+
+.app-logo-xl .app-logo-text {
+  font-size: var(--text-large-title);
+  font-weight: var(--font-weight-bold);
+}
+
 /* Layout Components */
 .ios-app {
   max-width: 414px; /* iPhone Pro Max width */
