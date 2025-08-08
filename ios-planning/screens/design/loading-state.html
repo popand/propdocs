@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PropDocs - Loading</title>
+    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="apple-touch-icon" href="logo.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="PropDocs">
+    <link rel="stylesheet" href="ios-design-system.css">
+    <style>
+        /* Loading state styles */
+        .loading-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background: linear-gradient(135deg, var(--ios-blue) 0%, var(--ios-purple) 100%);
+            color: white;
+            text-align: center;
+            padding: var(--spacing-lg);
+        }
+        
+        .loading-logo {
+            margin-bottom: var(--spacing-xl);
+        }
+        
+        .loading-logo-complete {
+            width: 320px;
+            height: 80px;
+            filter: brightness(0) invert(1); /* Make logo white */
+            animation: pulse 2s ease-in-out infinite;
+            background-image: url('./logo.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+        
+        /* Legacy styles for backwards compatibility */
+        .loading-logo .app-logo-icon {
+            width: 120px;
+            height: 120px;
+            filter: brightness(0) invert(1); /* Make logo white */
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        .loading-logo .app-logo-text {
+            font-size: 42px;
+            font-weight: var(--font-weight-bold);
+            color: white;
+            margin-top: var(--spacing-lg);
+            letter-spacing: -1px;
+        }
+        
+        .loading-subtitle {
+            font-size: var(--text-title-3);
+            font-weight: var(--font-weight-medium);
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: var(--spacing-xl);
+        }
+        
+        .loading-spinner {
+            width: 32px;
+            height: 32px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top: 3px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .loading-progress {
+            width: 200px;
+            height: 4px;
+            background-color: rgba(255, 255, 255, 0.3);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .loading-progress-fill {
+            height: 100%;
+            background-color: white;
+            border-radius: 2px;
+            animation: progress 3s ease-out infinite;
+        }
+        
+        .loading-text {
+            font-size: var(--text-subhead);
+            color: rgba(255, 255, 255, 0.7);
+            animation: fade 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.8; }
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @keyframes progress {
+            0% { width: 0%; }
+            50% { width: 70%; }
+            100% { width: 100%; }
+        }
+        
+        @keyframes fade {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+        }
+        
+        /* Alternative minimal loading state */
+        .minimal-loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: var(--background-primary);
+        }
+        
+        .minimal-loading .app-logo-icon {
+            width: 80px;
+            height: 80px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        .minimal-loading .app-logo-text {
+            font-size: var(--text-title-1);
+            font-weight: var(--font-weight-bold);
+            color: var(--label-primary);
+            margin-top: var(--spacing-md);
+        }
+        
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="ios-app">
+        <!-- Primary Loading State -->
+        <div class="loading-container" id="primary-loading">
+            <div class="loading-logo">
+                <div class="loading-logo-complete"></div>
+            </div>
+            
+            <div class="loading-subtitle">Property Management Made Simple</div>
+            
+            <div class="loading-spinner"></div>
+            
+            <div class="loading-progress">
+                <div class="loading-progress-fill"></div>
+            </div>
+            
+            <div class="loading-text">Loading your properties...</div>
+        </div>
+        
+        <!-- Minimal Loading State -->
+        <div class="minimal-loading hidden" id="minimal-loading">
+            <div class="app-logo-complete app-logo-complete-medium"></div>
+        </div>
+    </div>
+    
+    <script>
+        // Simulate loading sequence
+        setTimeout(() => {
+            document.getElementById('primary-loading').classList.add('hidden');
+            document.getElementById('minimal-loading').classList.remove('hidden');
+        }, 3000);
+        
+        // Redirect to main app after loading
+        setTimeout(() => {
+            window.location.href = 'home-dashboard.html';
+        }, 4000);
+    </script>
+</body>
+</html>

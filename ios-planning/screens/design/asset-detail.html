@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PropDocs - Asset Detail</title>
+    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="apple-touch-icon" href="logo.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="PropDocs">
+    <link rel="stylesheet" href="ios-design-system.css">
+    <style>
+        /* Asset Detail specific styles */
+        .hero-section {
+            position: relative;
+            height: 280px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 64px;
+            border-bottom: 0.5px solid var(--separator);
+        }
+        
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.3) 100%);
+        }
+        
+        .photo-indicator {
+            position: absolute;
+            bottom: var(--spacing-md);
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: var(--spacing-xs);
+        }
+        
+        .photo-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.5);
+        }
+        
+        .photo-dot.active {
+            background-color: white;
+        }
+        
+        .back-button {
+            position: absolute;
+            top: var(--spacing-md);
+            left: var(--spacing-md);
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .more-button {
+            position: absolute;
+            top: var(--spacing-md);
+            right: var(--spacing-md);
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .asset-header {
+            padding: var(--spacing-lg) var(--spacing-md) var(--spacing-md);
+            background-color: var(--background-primary);
+        }
+        
+        .asset-title-section {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .asset-title {
+            font-size: var(--text-title-1);
+            font-weight: var(--font-weight-bold);
+            color: var(--label-primary);
+            margin-bottom: var(--spacing-xs);
+            flex: 1;
+        }
+        
+        .asset-subtitle {
+            font-size: var(--text-body);
+            color: var(--label-secondary);
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .asset-health-badge {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+            background-color: var(--ios-green);
+            color: white;
+            padding: var(--spacing-xs) var(--spacing-md);
+            border-radius: var(--radius-xl);
+            font-size: var(--text-footnote);
+            font-weight: var(--font-weight-semibold);
+        }
+        
+        .asset-specs {
+            display: flex;
+            justify-content: space-between;
+            background-color: var(--fill-secondary);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-md);
+        }
+        
+        .spec-item {
+            text-align: center;
+            flex: 1;
+        }
+        
+        .spec-value {
+            font-size: var(--text-headline);
+            font-weight: var(--font-weight-semibold);
+            color: var(--label-primary);
+            margin-bottom: 2px;
+        }
+        
+        .spec-label {
+            font-size: var(--text-caption-1);
+            color: var(--label-secondary);
+        }
+        
+        .content-sections {
+            padding-bottom: var(--spacing-2xl);
+        }
+        
+        .section {
+            margin: var(--spacing-lg) 0;
+        }
+        
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 var(--spacing-md) var(--spacing-sm);
+        }
+        
+        .section-title {
+            font-size: var(--text-title-3);
+            font-weight: var(--font-weight-semibold);
+            color: var(--label-primary);
+        }
+        
+        .section-action {
+            color: var(--ios-blue);
+            font-size: var(--text-subhead);
+            font-weight: var(--font-weight-medium);
+            text-decoration: none;
+        }
+        
+        .info-grid {
+            background-color: var(--grouped-background-secondary);
+            border-radius: var(--radius-md);
+            margin: 0 var(--spacing-md);
+            overflow: hidden;
+        }
+        
+        .info-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--spacing-md);
+            border-bottom: 0.5px solid var(--separator);
+        }
+        
+        .info-row:last-child {
+            border-bottom: none;
+        }
+        
+        .info-label {
+            font-size: var(--text-body);
+            color: var(--label-primary);
+            font-weight: var(--font-weight-medium);
+        }
+        
+        .info-value {
+            font-size: var(--text-body);
+            color: var(--label-secondary);
+            text-align: right;
+        }
+        
+        .maintenance-list {
+            background-color: var(--grouped-background-secondary);
+            border-radius: var(--radius-md);
+            margin: 0 var(--spacing-md);
+            overflow: hidden;
+        }
+        
+        .maintenance-item {
+            display: flex;
+            align-items: center;
+            padding: var(--spacing-md);
+            border-bottom: 0.5px solid var(--separator);
+            text-decoration: none;
+            color: inherit;
+        }
+        
+        .maintenance-item:last-child {
+            border-bottom: none;
+        }
+        
+        .maintenance-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: var(--spacing-md);
+            font-size: 16px;
+            color: white;
+        }
+        
+        .maintenance-scheduled {
+            background-color: var(--ios-blue);
+        }
+        
+        .maintenance-overdue {
+            background-color: var(--ios-red);
+        }
+        
+        .maintenance-upcoming {
+            background-color: var(--ios-orange);
+        }
+        
+        .maintenance-content {
+            flex: 1;
+        }
+        
+        .maintenance-title {
+            font-size: var(--text-body);
+            font-weight: var(--font-weight-medium);
+            color: var(--label-primary);
+            margin-bottom: 2px;
+        }
+        
+        .maintenance-date {
+            font-size: var(--text-footnote);
+            color: var(--label-secondary);
+        }
+        
+        .maintenance-frequency {
+            font-size: var(--text-caption-1);
+            color: var(--label-tertiary);
+        }
+        
+        .maintenance-accessory {
+            color: var(--label-tertiary);
+            font-size: 18px;
+        }
+        
+        .service-history-list {
+            background-color: var(--grouped-background-secondary);
+            border-radius: var(--radius-md);
+            margin: 0 var(--spacing-md);
+            overflow: hidden;
+        }
+        
+        .service-item {
+            display: flex;
+            align-items: flex-start;
+            padding: var(--spacing-md);
+            border-bottom: 0.5px solid var(--separator);
+        }
+        
+        .service-item:last-child {
+            border-bottom: none;
+        }
+        
+        .service-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: var(--ios-green);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: var(--spacing-md);
+            margin-top: 2px;
+            flex-shrink: 0;
+            font-size: 16px;
+        }
+        
+        .service-content {
+            flex: 1;
+        }
+        
+        .service-title {
+            font-size: var(--text-body);
+            font-weight: var(--font-weight-medium);
+            color: var(--label-primary);
+            margin-bottom: 2px;
+        }
+        
+        .service-provider {
+            font-size: var(--text-footnote);
+            color: var(--label-secondary);
+            margin-bottom: var(--spacing-xs);
+        }
+        
+        .service-cost {
+            font-size: var(--text-footnote);
+            color: var(--ios-green);
+            font-weight: var(--font-weight-semibold);
+        }
+        
+        .service-date {
+            font-size: var(--text-caption-1);
+            color: var(--label-tertiary);
+            text-align: right;
+            margin-top: 2px;
+        }
+        
+        .action-buttons {
+            position: fixed;
+            bottom: 83px;
+            left: 0;
+            right: 0;
+            display: flex;
+            gap: var(--spacing-md);
+            padding: var(--spacing-md);
+            background: linear-gradient(to top, var(--background-primary) 70%, transparent);
+        }
+        
+        .action-btn {
+            flex: 1;
+            background-color: var(--ios-blue);
+            color: white;
+            border: none;
+            border-radius: var(--radius-md);
+            padding: var(--spacing-md);
+            font-size: var(--text-body);
+            font-weight: var(--font-weight-semibold);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .action-btn.secondary {
+            background-color: var(--fill-secondary);
+            color: var(--label-primary);
+        }
+        
+        .action-btn:active {
+            transform: scale(0.98);
+        }
+        
+        .no-content {
+            text-align: center;
+            padding: var(--spacing-2xl);
+            color: var(--label-secondary);
+        }
+        
+        .no-content-icon {
+            font-size: 32px;
+            margin-bottom: var(--spacing-md);
+            opacity: 0.5;
+        }
+        
+        .no-content-text {
+            font-size: var(--text-subhead);
+        }
+    </style>
+</head>
+<body>
+    <div class="ios-app">
+        <!-- Hero Section -->
+        <div class="hero-section">
+            <button class="back-button">‹</button>
+            <button class="more-button">⋯</button>
+            
+            <div style="font-size: 64px;">🏠</div>
+            <div class="hero-overlay"></div>
+            
+            <div class="photo-indicator">
+                <div class="photo-dot active"></div>
+                <div class="photo-dot"></div>
+                <div class="photo-dot"></div>
+            </div>
+        </div>
+        
+        <!-- Asset Header -->
+        <div class="asset-header">
+            <div class="asset-title-section">
+                <div>
+                    <div class="asset-title">Central HVAC System</div>
+                    <div class="asset-subtitle">Carrier • Model: 59MN7A0801</div>
+                </div>
+                <div class="asset-health-badge">
+                    <span class="status-dot status-good" style="background-color: white; opacity: 0.8;"></span>
+                    Good
+                </div>
+            </div>
+            
+            <div class="asset-specs">
+                <div class="spec-item">
+                    <div class="spec-value">2019</div>
+                    <div class="spec-label">Install Year</div>
+                </div>
+                <div class="spec-item">
+                    <div class="spec-value">5 years</div>
+                    <div class="spec-label">Age</div>
+                </div>
+                <div class="spec-item">
+                    <div class="spec-value">$8,500</div>
+                    <div class="spec-label">Value</div>
+                </div>
+                <div class="spec-item">
+                    <div class="spec-value">15-20</div>
+                    <div class="spec-label">Life (years)</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="content-sections">
+            <!-- Details Section -->
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-title">Details</div>
+                    <a href="#" class="section-action">Edit</a>
+                </div>
+                
+                <div class="info-grid">
+                    <div class="info-row">
+                        <div class="info-label">Location</div>
+                        <div class="info-value">Basement</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">System Type</div>
+                        <div class="info-value">Split System</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">BTU Rating</div>
+                        <div class="info-value">60,000 BTU</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Efficiency</div>
+                        <div class="info-value">16 SEER</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Serial Number</div>
+                        <div class="info-value">3119C54821</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Warranty</div>
+                        <div class="info-value">10 years parts</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Maintenance Schedule Section -->
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-title">Maintenance Schedule</div>
+                    <a href="#" class="section-action">Manage</a>
+                </div>
+                
+                <div class="maintenance-list">
+                    <a href="#" class="maintenance-item">
+                        <div class="maintenance-icon maintenance-overdue">!</div>
+                        <div class="maintenance-content">
+                            <div class="maintenance-title">Replace Air Filter</div>
+                            <div class="maintenance-date">Overdue by 2 weeks</div>
+                            <div class="maintenance-frequency">Every 3 months</div>
+                        </div>
+                        <div class="maintenance-accessory">›</div>
+                    </a>
+                    
+                    <a href="#" class="maintenance-item">
+                        <div class="maintenance-icon maintenance-upcoming">📅</div>
+                        <div class="maintenance-content">
+                            <div class="maintenance-title">Annual System Inspection</div>
+                            <div class="maintenance-date">Due in 2 months</div>
+                            <div class="maintenance-frequency">Annually</div>
+                        </div>
+                        <div class="maintenance-accessory">›</div>
+                    </a>
+                    
+                    <a href="#" class="maintenance-item">
+                        <div class="maintenance-icon maintenance-scheduled">🔧</div>
+                        <div class="maintenance-content">
+                            <div class="maintenance-title">Clean Condenser Coils</div>
+                            <div class="maintenance-date">Due in 4 months</div>
+                            <div class="maintenance-frequency">Every 6 months</div>
+                        </div>
+                        <div class="maintenance-accessory">›</div>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Service History Section -->
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-title">Service History</div>
+                    <a href="#" class="section-action">View All</a>
+                </div>
+                
+                <div class="service-history-list">
+                    <div class="service-item">
+                        <div class="service-icon">✓</div>
+                        <div class="service-content">
+                            <div class="service-title">Annual Maintenance</div>
+                            <div class="service-provider">HVAC Pro Services</div>
+                            <div class="service-cost">$245.00</div>
+                        </div>
+                        <div class="service-date">Sep 15, 2024</div>
+                    </div>
+                    
+                    <div class="service-item">
+                        <div class="service-icon">✓</div>
+                        <div class="service-content">
+                            <div class="service-title">Filter Replacement</div>
+                            <div class="service-provider">Self-completed</div>
+                            <div class="service-cost">$35.00</div>
+                        </div>
+                        <div class="service-date">Jun 12, 2024</div>
+                    </div>
+                    
+                    <div class="service-item">
+                        <div class="service-icon">✓</div>
+                        <div class="service-content">
+                            <div class="service-title">System Installation</div>
+                            <div class="service-provider">Climate Control Inc.</div>
+                            <div class="service-cost">$8,500.00</div>
+                        </div>
+                        <div class="service-date">Mar 22, 2019</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+            <button class="action-btn secondary">Schedule Service</button>
+            <button class="action-btn">Complete Task</button>
+        </div>
+        
+        <!-- Tab Bar -->
+        <div class="tab-bar">
+            <a href="#" class="tab-item">
+                <div class="tab-icon">🏠</div>
+                <div class="tab-label">Home</div>
+            </a>
+            <a href="#" class="tab-item active">
+                <div class="tab-icon">📦</div>
+                <div class="tab-label">Assets</div>
+            </a>
+            <a href="#" class="tab-item">
+                <div class="tab-icon">📅</div>
+                <div class="tab-label">Schedule</div>
+            </a>
+            <a href="#" class="tab-item">
+                <div class="tab-icon">📊</div>
+                <div class="tab-label">Reports</div>
+            </a>
+            <a href="#" class="tab-item">
+                <div class="tab-icon">⚙️</div>
+                <div class="tab-label">Settings</div>
+            </a>
+        </div>
+    </div>
+</body>
+</html>

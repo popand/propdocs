@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PropDocs - Settings</title>
+    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="apple-touch-icon" href="logo.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="PropDocs">
+    <link rel="stylesheet" href="ios-design-system.css">
+    <style>
+        /* Settings specific styles */
+        .settings-content {
+            padding-bottom: var(--spacing-2xl);
+        }
+        
+        .profile-section {
+            background-color: var(--grouped-background-secondary);
+            margin: var(--spacing-md);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-lg);
+            text-align: center;
+        }
+        
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--ios-blue) 0%, var(--ios-purple) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto var(--spacing-md);
+            font-size: 32px;
+            color: white;
+        }
+        
+        .profile-name {
+            font-size: var(--text-title-2);
+            font-weight: var(--font-weight-bold);
+            color: var(--label-primary);
+            margin-bottom: var(--spacing-xs);
+        }
+        
+        .profile-email {
+            font-size: var(--text-subhead);
+            color: var(--label-secondary);
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .profile-stats {
+            display: flex;
+            justify-content: space-between;
+            background-color: var(--fill-secondary);
+            border-radius: var(--radius-sm);
+            padding: var(--spacing-md);
+        }
+        
+        .profile-stat {
+            text-align: center;
+            flex: 1;
+        }
+        
+        .profile-stat-value {
+            font-size: var(--text-headline);
+            font-weight: var(--font-weight-semibold);
+            color: var(--label-primary);
+            margin-bottom: 2px;
+        }
+        
+        .profile-stat-label {
+            font-size: var(--text-caption-1);
+            color: var(--label-secondary);
+        }
+        
+        .settings-section {
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .section-title {
+            font-size: var(--text-footnote);
+            font-weight: var(--font-weight-semibold);
+            color: var(--label-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 0 var(--spacing-md) var(--spacing-sm);
+            margin-top: var(--spacing-lg);
+        }
+        
+        .settings-group {
+            background-color: var(--grouped-background-secondary);
+            border-radius: var(--radius-md);
+            margin: 0 var(--spacing-md);
+            overflow: hidden;
+        }
+        
+        .settings-item {
+            display: flex;
+            align-items: center;
+            padding: var(--spacing-md);
+            border-bottom: 0.5px solid var(--separator);
+            text-decoration: none;
+            color: inherit;
+            transition: background-color 0.15s ease;
+        }
+        
+        .settings-item:last-child {
+            border-bottom: none;
+        }
+        
+        .settings-item:active {
+            background-color: var(--fill-quaternary);
+        }
+        
+        .settings-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: var(--spacing-md);
+            font-size: 16px;
+            color: white;
+            flex-shrink: 0;
+        }
+        
+        .settings-icon.profile { background-color: var(--ios-blue); }
+        .settings-icon.properties { background-color: var(--ios-green); }
+        .settings-icon.notifications { background-color: var(--ios-red); }
+        .settings-icon.privacy { background-color: var(--ios-purple); }
+        .settings-icon.subscription { background-color: var(--ios-orange); }
+        .settings-icon.support { background-color: var(--ios-teal); }
+        .settings-icon.app { background-color: var(--label-secondary); }
+        .settings-icon.logout { background-color: var(--ios-red); }
+        
+        .settings-content-main {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .settings-title {
+            font-size: var(--text-body);
+            font-weight: var(--font-weight-regular);
+            color: var(--label-primary);
+            margin-bottom: 2px;
+        }
+        
+        .settings-subtitle {
+            font-size: var(--text-footnote);
+            color: var(--label-secondary);
+            line-height: 1.3;
+        }
+        
+        .settings-value {
+            font-size: var(--text-body);
+            color: var(--label-secondary);
+            margin-right: var(--spacing-sm);
+        }
+        
+        .settings-accessory {
+            color: var(--label-tertiary);
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+        
+        .toggle-switch {
+            position: relative;
+            width: 50px;
+            height: 30px;
+            background-color: var(--fill-secondary);
+            border-radius: 15px;
+            transition: background-color 0.3s ease;
+            cursor: pointer;
+            margin-left: auto;
+        }
+        
+        .toggle-switch.on {
+            background-color: var(--ios-green);
+        }
+        
+        .toggle-knob {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 26px;
+            height: 26px;
+            background-color: white;
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        }
+        
+        .toggle-switch.on .toggle-knob {
+            transform: translateX(20px);
+        }
+        
+        .badge {
+            background-color: var(--ios-red);
+            color: white;
+            font-size: var(--text-caption-1);
+            font-weight: var(--font-weight-semibold);
+            padding: 2px 6px;
+            border-radius: 10px;
+            min-width: 18px;
+            text-align: center;
+            margin-left: auto;
+            margin-right: var(--spacing-sm);
+        }
+        
+        .property-selector-item {
+            display: flex;
+            align-items: center;
+            padding: var(--spacing-md);
+            border-bottom: 0.5px solid var(--separator);
+            text-decoration: none;
+            color: inherit;
+            transition: background-color 0.15s ease;
+        }
+        
+        .property-selector-item:last-child {
+            border-bottom: none;
+        }
+        
+        .property-selector-item.selected {
+            background-color: var(--fill-quaternary);
+        }
+        
+        .property-selector-item:active {
+            background-color: var(--fill-quaternary);
+        }
+        
+        .property-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: var(--radius-sm);
+            background: linear-gradient(135deg, var(--ios-blue) 0%, var(--ios-purple) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: var(--spacing-md);
+            font-size: 16px;
+            color: white;
+            flex-shrink: 0;
+        }
+        
+        .property-info {
+            flex: 1;
+        }
+        
+        .property-name {
+            font-size: var(--text-body);
+            font-weight: var(--font-weight-medium);
+            color: var(--label-primary);
+            margin-bottom: 2px;
+        }
+        
+        .property-address {
+            font-size: var(--text-footnote);
+            color: var(--label-secondary);
+        }
+        
+        .check-mark {
+            color: var(--ios-blue);
+            font-size: 20px;
+            font-weight: bold;
+        }
+        
+        .version-info {
+            text-align: center;
+            padding: var(--spacing-lg);
+            color: var(--label-tertiary);
+        }
+        
+        .app-version {
+            font-size: var(--text-footnote);
+            margin-bottom: var(--spacing-xs);
+        }
+        
+        .build-info {
+            font-size: var(--text-caption-1);
+        }
+        
+        .destructive-item {
+            color: var(--ios-red) !important;
+        }
+        
+        .destructive-item .settings-title {
+            color: var(--ios-red);
+        }
+    </style>
+</head>
+<body>
+    <div class="ios-app">
+        <!-- Navigation Bar -->
+        <div class="navigation-bar">
+            <div class="navigation-title">Settings</div>
+            <button class="navigation-button">✏️</button>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="content-container">
+            <div class="settings-content">
+                <!-- Profile Section -->
+                <div class="profile-section">
+                    <div class="profile-avatar">AP</div>
+                    <div class="profile-name">Andrei Pop</div>
+                    <div class="profile-email">andrei.pop@example.com</div>
+                    
+                    <div class="profile-stats">
+                        <div class="profile-stat">
+                            <div class="profile-stat-value">2</div>
+                            <div class="profile-stat-label">Properties</div>
+                        </div>
+                        <div class="profile-stat">
+                            <div class="profile-stat-value">24</div>
+                            <div class="profile-stat-label">Assets</div>
+                        </div>
+                        <div class="profile-stat">
+                            <div class="profile-stat-value">7</div>
+                            <div class="profile-stat-label">Due Tasks</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Account Settings -->
+                <div class="settings-section">
+                    <div class="section-title">Account</div>
+                    <div class="settings-group">
+                        <a href="#" class="settings-item">
+                            <div class="settings-icon profile">👤</div>
+                            <div class="settings-content-main">
+                                <div class="settings-title">Profile</div>
+                                <div class="settings-subtitle">Edit personal information</div>
+                            </div>
+                            <div class="settings-accessory">›</div>
+                        </a>
+                        
+                        <a href="#" class="settings-item">
+                            <div class="settings-icon properties">🏠</div>
+                            <div class="settings-content-main">
+                                <div class="settings-title">Properties</div>
+                                <div class="settings-subtitle">Manage your properties</div>
+                            </div>
+                            <div class="settings-value">2 properties</div>
+                            <div class="settings-accessory">›</div>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- App Settings -->
+                <div class="settings-section">
+                    <div class="section-title">App Settings</div>
+                    <div class="settings-group">
+                        <a href="#" class="settings-item">
+                            <div class="settings-icon notifications">🔔</div>
+                            <div class="settings-content-main">
+                                <div class="settings-title">Notifications</div>
+                                <div class="settings-subtitle">Maintenance reminders & alerts</div>
+                            </div>
+                            <div class="toggle-switch on">
+                                <div class="toggle-knob"></div>
+                            </div>
+                        </a>
+                        
+                        <a href="#" class="settings-item">
+                            <div class="settings-icon privacy">🔒</div>
+                            <div class="settings-content-main">
+                                <div class="settings-title">Privacy & Security</div>
+                                <div class="settings-subtitle">Data sharing and permissions</div>
+                            </div>
+                            <div class="settings-accessory">›</div>
+                        </a>
+                        
+                        <div class="settings-item">
+                            <div class="settings-icon app">🌙</div>
+                            <div class="settings-content-main">
+                                <div class="settings-title">Dark Mode</div>
+                                <div class="settings-subtitle">Follow system setting</div>
+                            </div>
+                            <div class="toggle-switch">
+                                <div class="toggle-knob"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Subscription -->
+                <div class="settings-section">
+                    <div class="section-title">Subscription</div>
+                    <div class="settings-group">
+                        <a href="#" class="settings-item">
+                            <div class="settings-icon subscription">💎</div>
+                            <div class="settings-content-main">
+                                <div class="settings-title">PropDocs Pro</div>
+                                <div class="settings-subtitle">Unlimited properties & premium features</div>
+                            </div>
+                            <div class="settings-value">Active</div>
+                            <div class="settings-accessory">›</div>
+                        </a>
+                        
+                        <a href="#" class="settings-item">
+                            <div class="settings-icon app">💳</div>
+                            <div class="settings-content-main">
+                                <div class="settings-title">Billing</div>
+                                <div class="settings-subtitle">Payment methods & history</div>
+                            </div>
+                            <div class="settings-accessory">›</div>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Support -->
+                <div class="settings-section">
+                    <div class="section-title">Support</div>
+                    <div class="settings-group">
+                        <a href="#" class="settings-item">
+                            <div class="settings-icon support">❓</div>
+                            <div class="settings-content-main">
+                                <div class="settings-title">Help Center</div>
+                                <div class="settings-subtitle">FAQs and guides</div>
+                            </div>
+                            <div class="settings-accessory">›</div>
+                        </a>
+                        
+                        <a href="#" class="settings-item">
+                            <div class="settings-icon support">📧</div>
+                            <div class="settings-content-main">
+                                <div class="settings-title">Contact Support</div>
+                                <div class="settings-subtitle">Get help from our team</div>
+                            </div>
+                            <div class="settings-accessory">›</div>
+                        </a>
+                        
+                        <a href="#" class="settings-item">
+                            <div class="settings-icon app">⭐</div>
+                            <div class="settings-content-main">
+                                <div class="settings-title">Rate PropDocs</div>
+                                <div class="settings-subtitle">Help us improve</div>
+                            </div>
+                            <div class="settings-accessory">↗</div>
+                        </a>
+                        
+                        <a href="#" class="settings-item">
+                            <div class="settings-icon app">📝</div>
+                            <div class="settings-content-main">
+                                <div class="settings-title">Send Feedback</div>
+                                <div class="settings-subtitle">Share your thoughts</div>
+                            </div>
+                            <div class="badge">2</div>
+                            <div class="settings-accessory">›</div>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- About -->
+                <div class="settings-section">
+                    <div class="section-title">About</div>
+                    <div class="settings-group">
+                        <a href="#" class="settings-item">
+                            <div class="settings-icon app">📄</div>
+                            <div class="settings-content-main">
+                                <div class="settings-title">Terms of Service</div>
+                            </div>
+                            <div class="settings-accessory">↗</div>
+                        </a>
+                        
+                        <a href="#" class="settings-item">
+                            <div class="settings-icon app">🔒</div>
+                            <div class="settings-content-main">
+                                <div class="settings-title">Privacy Policy</div>
+                            </div>
+                            <div class="settings-accessory">↗</div>
+                        </a>
+                        
+                        <a href="#" class="settings-item">
+                            <div class="settings-icon app">ℹ️</div>
+                            <div class="settings-content-main">
+                                <div class="settings-title">About PropDocs</div>
+                                <div class="settings-subtitle">Version info & credits</div>
+                            </div>
+                            <div class="settings-accessory">›</div>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Logout -->
+                <div class="settings-section">
+                    <div class="settings-group">
+                        <a href="#" class="settings-item destructive-item">
+                            <div class="settings-icon logout">↗️</div>
+                            <div class="settings-content-main">
+                                <div class="settings-title">Sign Out</div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Version Info -->
+                <div class="version-info">
+                    <div class="app-version">PropDocs v1.0.0</div>
+                    <div class="build-info">Build 2024.11.8</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Tab Bar -->
+        <div class="tab-bar">
+            <a href="#" class="tab-item">
+                <div class="tab-icon">🏠</div>
+                <div class="tab-label">Home</div>
+            </a>
+            <a href="#" class="tab-item">
+                <div class="tab-icon">📦</div>
+                <div class="tab-label">Assets</div>
+            </a>
+            <a href="#" class="tab-item">
+                <div class="tab-icon">📅</div>
+                <div class="tab-label">Schedule</div>
+            </a>
+            <a href="#" class="tab-item">
+                <div class="tab-icon">📊</div>
+                <div class="tab-label">Reports</div>
+            </a>
+            <a href="#" class="tab-item active">
+                <div class="tab-icon">⚙️</div>
+                <div class="tab-label">Settings</div>
+            </a>
+        </div>
+    </div>
+    
+    <script>
+        // Toggle switch functionality
+        document.querySelectorAll('.toggle-switch').forEach(toggle => {
+            toggle.addEventListener('click', () => {
+                toggle.classList.toggle('on');
+            });
+        });
+    </script>
+</body>
+</html>
