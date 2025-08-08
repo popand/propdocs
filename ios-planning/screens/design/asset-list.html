@@ -506,7 +506,7 @@
     </div>
     
     <script>
-        function showGrid() {
+        function showGrid(event) {
             document.getElementById('grid-view').classList.remove('hidden');
             document.getElementById('list-view').classList.add('hidden');
             
@@ -514,7 +514,7 @@
             event.target.classList.add('active');
         }
         
-        function showList() {
+        function showList(event) {
             document.getElementById('list-view').classList.remove('hidden');
             document.getElementById('grid-view').classList.add('hidden');
             
