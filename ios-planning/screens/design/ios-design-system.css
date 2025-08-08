@@ -243,8 +243,8 @@ body {
 }
 
 .app-logo-complete-nav {
-  width: 120px;
-  height: 28px;
+  width: 160px;
+  height: 36px;
 }
 
 .app-logo-complete-medium {
@@ -308,7 +308,7 @@ body {
 }
 
 .navigation-bar {
-  height: 44px;
+  height: 52px;
   background-color: var(--background-primary);
   border-bottom: 0.5px solid var(--separator);
   display: flex;
@@ -318,6 +318,10 @@ body {
   position: sticky;
   top: 0;
   z-index: var(--z-navigation-bar);
+}
+
+.navigation-bar .app-logo-complete {
+  margin-left: -4px; /* Fine-tune alignment */
 }
 
 .navigation-title {
@@ -330,10 +334,15 @@ body {
   background: none;
   border: none;
   color: var(--ios-blue);
-  font-size: var(--text-body);
+  font-size: 20px;
   font-weight: var(--font-weight-regular);
   cursor: pointer;
   padding: var(--spacing-xs);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  height: 32px;
 }
 
 .content-container {
