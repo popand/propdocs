@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PropDocs - UX Design Prototypes</title>
+    <link rel="stylesheet" href="ios-design-system.css">
+    <style>
+        /* Navigation framework styles */
+        .prototype-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--spacing-lg);
+            background-color: var(--grouped-background-primary);
+            min-height: 100vh;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: var(--spacing-2xl);
+        }
+        
+        .header-title {
+            font-size: var(--text-large-title);
+            font-weight: var(--font-weight-bold);
+            color: var(--label-primary);
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .header-subtitle {
+            font-size: var(--text-title-3);
+            color: var(--label-secondary);
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .header-description {
+            font-size: var(--text-body);
+            color: var(--label-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.5;
+        }
+        
+        .screens-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: var(--spacing-lg);
+            margin-bottom: var(--spacing-2xl);
+        }
+        
+        .screen-card {
+            background-color: var(--grouped-background-secondary);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            text-decoration: none;
+            color: inherit;
+        }
+        
+        .screen-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .screen-preview {
+            height: 200px;
+            background: linear-gradient(135deg, var(--ios-blue) 0%, var(--ios-purple) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .screen-preview::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 10px,
+                rgba(255,255,255,0.1) 10px,
+                rgba(255,255,255,0.1) 20px
+            );
+            animation: float 20s linear infinite;
+        }
+        
+        @keyframes float {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+        
+        .screen-preview.home {
+            background: linear-gradient(135deg, var(--ios-blue) 0%, var(--ios-indigo) 100%);
+        }
+        
+        .screen-preview.assets {
+            background: linear-gradient(135deg, var(--ios-green) 0%, var(--ios-teal) 100%);
+        }
+        
+        .screen-preview.detail {
+            background: linear-gradient(135deg, var(--ios-orange) 0%, var(--ios-red) 100%);
+        }
+        
+        .screen-preview.schedule {
+            background: linear-gradient(135deg, var(--ios-purple) 0%, var(--ios-pink) 100%);
+        }
+        
+        .screen-preview.settings {
+            background: linear-gradient(135deg, var(--label-secondary) 0%, var(--label-tertiary) 100%);
+        }
+        
+        .screen-info {
+            padding: var(--spacing-lg);
+        }
+        
+        .screen-title {
+            font-size: var(--text-title-2);
+            font-weight: var(--font-weight-bold);
+            color: var(--label-primary);
+            margin-bottom: var(--spacing-xs);
+        }
+        
+        .screen-description {
+            font-size: var(--text-subhead);
+            color: var(--label-secondary);
+            line-height: 1.4;
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .screen-features {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .screen-features li {
+            font-size: var(--text-footnote);
+            color: var(--label-tertiary);
+            margin-bottom: var(--spacing-xs);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+        
+        .screen-features li::before {
+            content: '✓';
+            color: var(--ios-green);
+            font-weight: bold;
+            font-size: var(--text-subhead);
+        }
+        
+        .design-system-section {
+            background-color: var(--grouped-background-secondary);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .design-system-title {
+            font-size: var(--text-title-2);
+            font-weight: var(--font-weight-bold);
+            color: var(--label-primary);
+            margin-bottom: var(--spacing-md);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+        
+        .design-system-description {
+            font-size: var(--text-body);
+            color: var(--label-secondary);
+            line-height: 1.5;
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .color-palette {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .color-swatch {
+            text-align: center;
+        }
+        
+        .color-circle {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin: 0 auto var(--spacing-xs);
+            border: 2px solid var(--separator);
+        }
+        
+        .color-name {
+            font-size: var(--text-caption-1);
+            color: var(--label-secondary);
+            font-weight: var(--font-weight-medium);
+        }
+        
+        .color-blue .color-circle { background-color: var(--ios-blue); }
+        .color-green .color-circle { background-color: var(--ios-green); }
+        .color-orange .color-circle { background-color: var(--ios-orange); }
+        .color-red .color-circle { background-color: var(--ios-red); }
+        .color-purple .color-circle { background-color: var(--ios-purple); }
+        .color-teal .color-circle { background-color: var(--ios-teal); }
+        
+        .typography-samples {
+            display: grid;
+            gap: var(--spacing-md);
+        }
+        
+        .type-sample {
+            padding: var(--spacing-md);
+            background-color: var(--fill-secondary);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+        }
+        
+        .type-label {
+            font-size: var(--text-caption-1);
+            color: var(--label-tertiary);
+            font-weight: var(--font-weight-medium);
+            min-width: 80px;
+        }
+        
+        .responsive-note {
+            background-color: var(--fill-tertiary);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-lg);
+            margin-top: var(--spacing-lg);
+            text-align: center;
+        }
+        
+        .responsive-note-title {
+            font-size: var(--text-headline);
+            font-weight: var(--font-weight-semibold);
+            color: var(--label-primary);
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .responsive-note-text {
+            font-size: var(--text-subhead);
+            color: var(--label-secondary);
+            line-height: 1.4;
+        }
+        
+        @media (max-width: 768px) {
+            .screens-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .prototype-container {
+                padding: var(--spacing-md);
+            }
+            
+            .color-palette {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="prototype-container">
+        <!-- Header -->
+        <div class="header">
+            <h1 class="header-title">PropDocs iOS UX Prototypes</h1>
+            <p class="header-subtitle">Interactive Design System & Screen Mockups</p>
+            <p class="header-description">
+                Comprehensive HTML/CSS prototypes representing the core capabilities and user flows 
+                for the PropDocs iOS application. These designs follow iOS Human Interface Guidelines 
+                and demonstrate the complete property management experience.
+            </p>
+        </div>
+        
+        <!-- Screen Prototypes -->
+        <div class="screens-grid">
+            <a href="home-dashboard.html" class="screen-card">
+                <div class="screen-preview home">
+                    🏠
+                </div>
+                <div class="screen-info">
+                    <h2 class="screen-title">Home Dashboard</h2>
+                    <p class="screen-description">
+                        Central hub showing property overview, upcoming tasks, and quick actions.
+                    </p>
+                    <ul class="screen-features">
+                        <li>Property health score</li>
+                        <li>Upcoming maintenance tasks</li>
+                        <li>Recent activity feed</li>
+                        <li>Quick action buttons</li>
+                        <li>Property switching</li>
+                    </ul>
+                </div>
+            </a>
+            
+            <a href="asset-list.html" class="screen-card">
+                <div class="screen-preview assets">
+                    📦
+                </div>
+                <div class="screen-info">
+                    <h2 class="screen-title">Asset List</h2>
+                    <p class="screen-description">
+                        Comprehensive view of all property assets with filtering and search.
+                    </p>
+                    <ul class="screen-features">
+                        <li>Grid and list view modes</li>
+                        <li>Category filtering</li>
+                        <li>Search functionality</li>
+                        <li>Asset status indicators</li>
+                        <li>Grouped by category</li>
+                    </ul>
+                </div>
+            </a>
+            
+            <a href="asset-detail.html" class="screen-card">
+                <div class="screen-preview detail">
+                    🔧
+                </div>
+                <div class="screen-info">
+                    <h2 class="screen-title">Asset Detail</h2>
+                    <p class="screen-description">
+                        Complete asset information with maintenance schedule and service history.
+                    </p>
+                    <ul class="screen-features">
+                        <li>Photo carousel</li>
+                        <li>Asset specifications</li>
+                        <li>Maintenance schedule</li>
+                        <li>Service history</li>
+                        <li>Action buttons</li>
+                    </ul>
+                </div>
+            </a>
+            
+            <a href="maintenance-schedule.html" class="screen-card">
+                <div class="screen-preview schedule">
+                    📅
+                </div>
+                <div class="screen-info">
+                    <h2 class="screen-title">Maintenance Schedule</h2>
+                    <p class="screen-description">
+                        Calendar and list views of all maintenance tasks with priority indicators.
+                    </p>
+                    <ul class="screen-features">
+                        <li>Calendar and list views</li>
+                        <li>Task priority indicators</li>
+                        <li>Overdue task highlights</li>
+                        <li>Task completion actions</li>
+                        <li>Filter by category</li>
+                    </ul>
+                </div>
+            </a>
+            
+            <a href="settings.html" class="screen-card">
+                <div class="screen-preview settings">
+                    ⚙️
+                </div>
+                <div class="screen-info">
+                    <h2 class="screen-title">Settings</h2>
+                    <p class="screen-description">
+                        User profile, app preferences, and account management.
+                    </p>
+                    <ul class="screen-features">
+                        <li>User profile section</li>
+                        <li>Property statistics</li>
+                        <li>Notification settings</li>
+                        <li>Privacy controls</li>
+                        <li>Support options</li>
+                    </ul>
+                </div>
+            </a>
+        </div>
+        
+        <!-- Design System Documentation -->
+        <div class="design-system-section">
+            <h2 class="design-system-title">
+                🎨 Design System
+            </h2>
+            <p class="design-system-description">
+                The PropDocs design system is built on iOS Human Interface Guidelines, featuring 
+                native iOS components, typography, and color schemes optimized for property management workflows.
+            </p>
+            
+            <h3 class="title-3" style="margin-bottom: var(--spacing-md);">Color Palette</h3>
+            <div class="color-palette">
+                <div class="color-swatch color-blue">
+                    <div class="color-circle"></div>
+                    <div class="color-name">iOS Blue</div>
+                </div>
+                <div class="color-swatch color-green">
+                    <div class="color-circle"></div>
+                    <div class="color-name">iOS Green</div>
+                </div>
+                <div class="color-swatch color-orange">
+                    <div class="color-circle"></div>
+                    <div class="color-name">iOS Orange</div>
+                </div>
+                <div class="color-swatch color-red">
+                    <div class="color-circle"></div>
+                    <div class="color-name">iOS Red</div>
+                </div>
+                <div class="color-swatch color-purple">
+                    <div class="color-circle"></div>
+                    <div class="color-name">iOS Purple</div>
+                </div>
+                <div class="color-swatch color-teal">
+                    <div class="color-circle"></div>
+                    <div class="color-name">iOS Teal</div>
+                </div>
+            </div>
+            
+            <h3 class="title-3" style="margin-bottom: var(--spacing-md);">Typography Scale</h3>
+            <div class="typography-samples">
+                <div class="type-sample">
+                    <span class="type-label">Large Title</span>
+                    <span class="large-title">34px Bold</span>
+                </div>
+                <div class="type-sample">
+                    <span class="type-label">Title 1</span>
+                    <span class="title-1">28px Bold</span>
+                </div>
+                <div class="type-sample">
+                    <span class="type-label">Title 2</span>
+                    <span class="title-2">22px Bold</span>
+                </div>
+                <div class="type-sample">
+                    <span class="type-label">Title 3</span>
+                    <span class="title-3">20px Semibold</span>
+                </div>
+                <div class="type-sample">
+                    <span class="type-label">Headline</span>
+                    <span class="headline">17px Semibold</span>
+                </div>
+                <div class="type-sample">
+                    <span class="type-label">Body</span>
+                    <span class="body">17px Regular</span>
+                </div>
+                <div class="type-sample">
+                    <span class="type-label">Callout</span>
+                    <span class="callout">16px Regular</span>
+                </div>
+                <div class="type-sample">
+                    <span class="type-label">Subhead</span>
+                    <span class="subhead">15px Regular</span>
+                </div>
+                <div class="type-sample">
+                    <span class="type-label">Footnote</span>
+                    <span class="footnote">13px Regular</span>
+                </div>
+                <div class="type-sample">
+                    <span class="type-label">Caption</span>
+                    <span class="caption-1">12px Regular</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Responsive Note -->
+        <div class="responsive-note">
+            <h3 class="responsive-note-title">📱 Mobile-First Design</h3>
+            <p class="responsive-note-text">
+                All prototypes are optimized for iPhone screen sizes (320px - 414px) with responsive 
+                breakpoints for larger screens. The design system uses iOS-native component patterns 
+                and follows Apple's accessibility guidelines.
+            </p>
+        </div>
+    </div>
+</body>
+</html>
