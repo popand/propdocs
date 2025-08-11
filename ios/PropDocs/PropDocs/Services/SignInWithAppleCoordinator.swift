@@ -10,7 +10,7 @@ import AuthenticationServices
 import CryptoKit
 import UIKit
 
-class SignInWithAppleCoordinator: NSObject, AuthenticationProviderProtocol {
+class SignInWithAppleCoordinator: NSObject, AuthenticationProviderProtocol, @unchecked Sendable {
     
     let provider: AuthenticationProvider = .apple
     
@@ -115,7 +115,7 @@ extension SignInWithAppleCoordinator: ASAuthorizationControllerDelegate {
             return
         }
         
-        guard let nonce = currentNonce else {
+        guard let _ = currentNonce else {
             continuation?.resume(throwing: AuthenticationError.failed("Invalid state: A login callback was received, but no login request was sent."))
             return
         }
@@ -181,6 +181,14 @@ extension SignInWithAppleCoordinator: ASAuthorizationControllerDelegate {
                 authError = .failed("Request not handled")
             case .unknown:
                 authError = .unknown
+            case .notInteractive:
+                authError = .failed("Not interactive")
+            case .matchedExcludedCredential:
+                authError = .failed("Matched excluded credential")
+            case .credentialImport:
+                authError = .failed("Credential import failed")
+            case .credentialExport:
+                authError = .failed("Credential export failed")
             @unknown default:
                 authError = .unknown
             }

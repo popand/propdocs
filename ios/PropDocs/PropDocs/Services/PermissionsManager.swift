@@ -126,6 +126,21 @@ enum PermissionError: Error, LocalizedError {
     }
 }
 
+// MARK: - PermissionError Equatable Conformance
+
+extension PermissionError: Equatable {
+    static func == (lhs: PermissionError, rhs: PermissionError) -> Bool {
+        switch (lhs, rhs) {
+        case (.denied, .denied), (.restricted, .restricted), (.settingsRequired, .settingsRequired):
+            return true
+        case (.unknown(let lhsError), .unknown(let rhsError)):
+            return lhsError.localizedDescription == rhsError.localizedDescription
+        default:
+            return false
+        }
+    }
+}
+
 // MARK: - Permissions Manager
 
 @MainActor

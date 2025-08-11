@@ -507,10 +507,10 @@ struct AddAssetView: View {
         NavigationView {
             VStack {
                 Text("Add Asset")
-                    .font(.title(.bold))
+                    .font(.title.weight(.bold))
                 
                 Text("Asset creation form would go here")
-                    .font(.body(.regular))
+                    .font(.body)
                     .foregroundColor(PropDocsColors.labelSecondary)
             }
             .navigationTitle("New Asset")

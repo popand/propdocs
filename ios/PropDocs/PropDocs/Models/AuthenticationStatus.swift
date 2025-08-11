@@ -10,7 +10,7 @@ import Foundation
 // Hooks are now properly configured and working!
 
 enum AuthenticationStatus: Equatable {
-    case authenticated(user: User)
+    case authenticated(user: AppUser)
     case unauthenticated
     case loading
 
@@ -36,7 +36,7 @@ enum AuthenticationStatus: Equatable {
         }
     }
 
-    var user: User? {
+    var user: AppUser? {
         switch self {
         case let .authenticated(user):
             return user
@@ -46,7 +46,7 @@ enum AuthenticationStatus: Equatable {
     }
 }
 
-enum AuthenticationProvider: String, CaseIterable {
+enum AuthenticationProvider: String, CaseIterable, Codable {
     case apple
     case google
 

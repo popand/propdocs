@@ -236,7 +236,7 @@ class PropertyPhotoUploadService: PropertyPhotoUploadServiceProtocol {
         let photoPath = photosDirectory.appendingPathComponent("\(photoId.uuidString).jpg")
         
         guard let imageData = try? Data(contentsOf: photoPath),
-              let image = UIImage(data: imageData) else {
+              let _ = UIImage(data: imageData) else {
             throw PropertyPhotoUploadError.localFileNotFound
         }
         
@@ -249,37 +249,38 @@ class PropertyPhotoUploadService: PropertyPhotoUploadServiceProtocol {
     
     private func compressAndSaveImage(_ image: UIImage, photoId: UUID) async throws -> (String, String, Data) {
         return try await withCheckedThrowingContinuation { continuation in
-            DispatchQueue.global(qos: .userInitiated).async { [weak self] in
-                guard let self = self else {
-                    continuation.resume(throwing: PropertyPhotoUploadError.compressionFailed)
-                    return
-                }
+            let compressionConfig = self.compressionConfig
+            let photosDirectory = self.photosDirectory
+            let thumbnailsDirectory = self.thumbnailsDirectory
+            
+            DispatchQueue.global(qos: .userInitiated).async {
+                let strongSelf = self
                 
                 do {
                     // Resize image if needed
-                    let resizedImage = self.resizeImage(image, maxDimension: self.compressionConfig.maxDimension)
+                    let resizedImage = strongSelf.resizeImage(image, maxDimension: compressionConfig.maxDimension)
                     
                     // Compress to JPEG
-                    guard let compressedData = resizedImage.jpegData(compressionQuality: self.compressionConfig.jpegQuality) else {
+                    guard let compressedData = resizedImage.jpegData(compressionQuality: compressionConfig.jpegQuality) else {
                         continuation.resume(throwing: PropertyPhotoUploadError.compressionFailed)
                         return
                     }
                     
                     // Check if we need further compression to meet file size limit
-                    let finalData = self.compressToFileSize(compressedData, maxSize: self.compressionConfig.maxFileSize, originalImage: resizedImage)
+                    let finalData = strongSelf.compressToFileSize(compressedData, maxSize: compressionConfig.maxFileSize, originalImage: resizedImage)
                     
                     // Save full-size compressed image
-                    let photoPath = self.photosDirectory.appendingPathComponent("\(photoId.uuidString).jpg")
+                    let photoPath = photosDirectory.appendingPathComponent("\(photoId.uuidString).jpg")
                     try finalData.write(to: photoPath)
                     
                     // Create and save thumbnail
-                    let thumbnail = self.createThumbnail(from: resizedImage, size: self.compressionConfig.thumbnailSize)
+                    let thumbnail = strongSelf.createThumbnail(from: resizedImage, size: compressionConfig.thumbnailSize)
                     guard let thumbnailData = thumbnail.jpegData(compressionQuality: 0.8) else {
                         continuation.resume(throwing: PropertyPhotoUploadError.compressionFailed)
                         return
                     }
                     
-                    let thumbnailPath = self.thumbnailsDirectory.appendingPathComponent("\(photoId.uuidString)_thumb.jpg")
+                    let thumbnailPath = thumbnailsDirectory.appendingPathComponent("\(photoId.uuidString)_thumb.jpg")
                     try thumbnailData.write(to: thumbnailPath)
                     
                     continuation.resume(returning: (
@@ -358,7 +359,7 @@ class PropertyPhotoUploadService: PropertyPhotoUploadServiceProtocol {
         let totalBytes = Int64(data.count)
         let chunkSize: Int64 = max(totalBytes / 10, 1024) // 10% chunks or 1KB minimum
         
-        for uploaded in stride(from: Int64(0), through: totalBytes, by: chunkSize) {
+        for uploaded in stride(from: Int64(0), through: totalBytes, by: Int(chunkSize)) {
             let bytesUploaded = min(uploaded + chunkSize, totalBytes)
             updateProgress(photoId: photoId, status: .uploading, bytesUploaded: bytesUploaded, totalBytes: totalBytes)
             

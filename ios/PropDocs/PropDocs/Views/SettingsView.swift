@@ -550,10 +550,10 @@ struct EditProfileView: View {
         NavigationView {
             VStack {
                 Text("Edit Profile")
-                    .font(.title(.bold))
+                    .font(.title.weight(.bold))
                 
                 Text("Profile editing form would go here")
-                    .font(.body(.regular))
+                    .font(.body)
                     .foregroundColor(PropDocsColors.labelSecondary)
             }
             .navigationTitle("Edit Profile")

@@ -676,10 +676,10 @@ struct AddTaskView: View {
         NavigationView {
             VStack {
                 Text("Add Task")
-                    .font(.title(.bold))
+                    .font(.title.weight(.bold))
                 
                 Text("Task creation form would go here")
-                    .font(.body(.regular))
+                    .font(.body)
                     .foregroundColor(PropDocsColors.labelSecondary)
             }
             .navigationTitle("New Task")

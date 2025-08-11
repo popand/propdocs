@@ -65,6 +65,19 @@ extension Color {
     static let categoryGeneral = labelSecondary
 }
 
+// MARK: - ShapeStyle Extensions for Color Shorthand
+
+extension ShapeStyle where Self == Color {
+    static var propDocsBlue: Color { Color.propDocsBlue }
+    static var propDocsGreen: Color { Color.propDocsGreen }
+    static var propDocsOrange: Color { Color.propDocsOrange }
+    static var propDocsRed: Color { Color.propDocsRed }
+    static var propdocsPurple: Color { Color.propdocsPurple }
+    static var propDocsTeal: Color { Color.propDocsTeal }
+    static var propDocsPink: Color { Color.propDocsPink }
+    static var propDocsIndigo: Color { Color.propDocsIndigo }
+}
+
 // MARK: - Dynamic Color Support
 
 struct PropDocsColors {

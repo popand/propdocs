@@ -52,6 +52,16 @@ class AuthenticationViewModel: ObservableObject {
         }
     }
     
+    // MARK: - Authentication Status
+    
+    func checkAuthenticationStatus() {
+        // Update authentication status based on current auth manager state
+        let status = authenticationManager.authenticationStatus
+        if status != authenticationStatus {
+            authenticationStatus = status
+        }
+    }
+    
     // MARK: - Authentication Actions
     
     func signIn(with provider: AuthenticationProvider) async {
@@ -180,7 +190,7 @@ class AuthenticationViewModel: ObservableObject {
         authenticationStatus.isAuthenticated
     }
     
-    var currentUser: User? {
+    var currentUser: AppUser? {
         authenticationStatus.user
     }
     
@@ -215,6 +225,13 @@ class AuthenticationViewModel: ObservableObject {
     func getProviderDisplayName(_ provider: AuthenticationProvider) -> String {
         return provider.displayName
     }
+    
+    // MARK: - Mock Authentication for Onboarding
+    
+    func completeOnboardingWithMockAuth() {
+        authenticationManager.setMockAuthenticationForOnboarding()
+        checkAuthenticationStatus()
+    }
 }
 
 // MARK: - Preview Helpers
@@ -228,9 +245,7 @@ extension AuthenticationViewModel {
     
     static var previewAuthenticated: AuthenticationViewModel {
         let viewModel = AuthenticationViewModel()
-        let user = User()
-        user.name = "John Doe"
-        user.email = "john@example.com"
+        let user = AppUser(id: "preview_user", email: "john@example.com", name: "John Doe")
         viewModel.authenticationStatus = .authenticated(user: user)
         return viewModel
     }

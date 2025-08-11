@@ -15,6 +15,10 @@ struct AssetDetailView: View {
     @State private var showingServiceHistory = false
     @State private var showingEditAsset = false
     
+    init(asset: MockAsset) {
+        self.asset = asset
+    }
+    
     // Mock asset photos
     private let mockPhotos = ["placeholder1", "placeholder2", "placeholder3"]
     
@@ -525,10 +529,11 @@ struct EditAssetView: View {
         NavigationView {
             VStack {
                 Text("Edit Asset")
-                    .font(.title(.bold))
+                    .font(.title)
+                    .fontWeight(.bold)
                 
                 Text("Asset editing form would go here")
-                    .font(.body(.regular))
+                    .font(.body)
                     .foregroundColor(PropDocsColors.labelSecondary)
             }
             .navigationTitle("Edit Asset")

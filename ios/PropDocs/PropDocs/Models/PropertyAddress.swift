@@ -210,6 +210,33 @@ struct PropertyAddress: Codable, Equatable, Hashable {
         }
     }
     
+    // MARK: - Equatable Conformance
+    
+    static func == (lhs: PropertyAddress, rhs: PropertyAddress) -> Bool {
+        return lhs.street == rhs.street &&
+               lhs.city == rhs.city &&
+               lhs.state == rhs.state &&
+               lhs.postalCode == rhs.postalCode &&
+               lhs.country == rhs.country &&
+               lhs.unitNumber == rhs.unitNumber &&
+               lhs.buildingName == rhs.buildingName &&
+               lhs.neighborhood == rhs.neighborhood &&
+               lhs.county == rhs.county &&
+               lhs.coordinatesEqual(rhs.coordinate)
+    }
+    
+    private func coordinatesEqual(_ other: CLLocationCoordinate2D?) -> Bool {
+        switch (coordinate, other) {
+        case (nil, nil):
+            return true
+        case (let coord1?, let coord2?):
+            return abs(coord1.latitude - coord2.latitude) < 0.000001 &&
+                   abs(coord1.longitude - coord2.longitude) < 0.000001
+        default:
+            return false
+        }
+    }
+    
     // MARK: - Hashable Conformance
     
     func hash(into hasher: inout Hasher) {
@@ -220,6 +247,10 @@ struct PropertyAddress: Codable, Equatable, Hashable {
         hasher.combine(country)
         hasher.combine(unitNumber)
         hasher.combine(buildingName)
+        if let coordinate = coordinate {
+            hasher.combine(coordinate.latitude)
+            hasher.combine(coordinate.longitude)
+        }
     }
 }
 
