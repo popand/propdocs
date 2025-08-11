@@ -14,20 +14,29 @@ extension AnyPublisher {
     func async() async throws -> Output {
         return try await withCheckedThrowingContinuation { continuation in
             var cancellable: AnyCancellable?
+            var hasResumed = false
+            
             cancellable = self
+                .timeout(.seconds(30), scheduler: DispatchQueue.main)
                 .sink(
                     receiveCompletion: { completion in
+                        defer { cancellable?.cancel() }
+                        guard !hasResumed else { return }
+                        hasResumed = true
+                        
                         switch completion {
                         case .finished:
-                            break
+                            // If we get here without a value, it means the publisher completed without emitting
+                            continuation.resume(throwing: URLError(.unknown))
                         case .failure(let error):
                             continuation.resume(throwing: error)
                         }
-                        cancellable?.cancel()
                     },
                     receiveValue: { value in
+                        defer { cancellable?.cancel() }
+                        guard !hasResumed else { return }
+                        hasResumed = true
                         continuation.resume(returning: value)
-                        cancellable?.cancel()
                     }
                 )
         }

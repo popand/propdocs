@@ -226,9 +226,14 @@ class AuthenticationManager: ObservableObject, @unchecked Sendable {
     func getCoreDataUser() -> User? {
         guard let appUser = currentUser else { return nil }
         
+        // Validate that appUser.id can be converted to UUID
+        guard let userId = UUID(uuidString: appUser.id) else {
+            print("Error: AppUser ID '\(appUser.id)' is not a valid UUID string")
+            return nil
+        }
+        
         let context = CoreDataStack.shared.context
         let fetchRequest: NSFetchRequest<User> = User.fetchRequest()
-        let userId = UUID(uuidString: appUser.id) ?? UUID()
         fetchRequest.predicate = NSPredicate(format: "id == %@", userId as CVarArg)
         
         do {
@@ -239,7 +244,7 @@ class AuthenticationManager: ObservableObject, @unchecked Sendable {
             
             // Create new Core Data User entity
             let coreDataUser = User(context: context)
-            coreDataUser.id = UUID(uuidString: appUser.id) ?? UUID()
+            coreDataUser.id = userId
             coreDataUser.email = appUser.email
             coreDataUser.name = appUser.name
             coreDataUser.profileImageURL = appUser.profileImageURL
