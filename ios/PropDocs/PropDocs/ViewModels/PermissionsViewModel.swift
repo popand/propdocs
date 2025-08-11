@@ -64,10 +64,10 @@ class PermissionsViewModel: ObservableObject {
         
         let results = await permissionsManager.requestAllPermissions()
         
-        // Handle any errors
+        // Handle any errors from permission requests
         let errors = results.compactMap { $0.error }
         if !errors.isEmpty {
-            let hasSettingsRequired = errors.contains { $0 as? PermissionError == .settingsRequired }
+            let hasSettingsRequired = errors.contains { $0 == .settingsRequired }
             if hasSettingsRequired {
                 error = "Some permissions require manual enabling in Settings"
             } else {

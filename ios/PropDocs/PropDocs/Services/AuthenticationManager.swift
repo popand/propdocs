@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import CoreData
 
 // MARK: - Authentication Provider Protocol
 
@@ -37,7 +38,7 @@ struct AuthenticationResult {
 
 // MARK: - Main Authentication Manager
 
-class AuthenticationManager: ObservableObject {
+class AuthenticationManager: ObservableObject, @unchecked Sendable {
     static let shared = AuthenticationManager()
     
     @Published private(set) var authenticationStatus: AuthenticationStatus = .loading
@@ -138,17 +139,21 @@ class AuthenticationManager: ObservableObject {
     @MainActor
     private func checkExistingAuthentication() async {
         // Check if we have stored tokens
-        guard let accessToken = keychainManager.accessToken,
+        guard let _ = keychainManager.accessToken,
               let userID = keychainManager.userID,
               let provider = keychainManager.authProvider else {
             authenticationStatus = .unauthenticated
             return
         }
         
-        // Create user from stored data
-        let user = User()
-        user.id = UUID(uuidString: userID) ?? UUID()
-        user.authProvider = provider.rawValue
+        // Create AppUser from stored data
+        let user = AppUser(
+            id: userID,
+            email: nil, // TODO: Store and retrieve user email from keychain
+            name: nil,  // TODO: Store and retrieve user name from keychain
+            profileImageURL: nil,
+            provider: AuthenticationProvider(rawValue: provider.rawValue)
+        )
         
         authenticationStatus = .authenticated(user: user)
         
@@ -174,17 +179,19 @@ class AuthenticationManager: ObservableObject {
         keychainManager.userID = result.user.id
         keychainManager.authProvider = result.user.provider
         
-        // Create or update user in Core Data
-        let user = User()
-        user.id = UUID(uuidString: result.user.id) ?? UUID()
-        user.email = result.user.email
-        user.name = result.user.name
-        user.profileImageURL = result.user.profileImageURL
-        user.authProvider = result.user.provider.rawValue
-        user.updatedAt = Date()
+        // Create AppUser for authentication state
+        let appUser = AppUser(
+            id: result.user.id,
+            email: result.user.email,
+            name: result.user.name,
+            profileImageURL: result.user.profileImageURL,
+            provider: result.user.provider
+        )
+        
+        // TODO: Later, create or update Core Data User entity separately if needed
         
         DispatchQueue.main.async {
-            self.authenticationStatus = .authenticated(user: user)
+            self.authenticationStatus = .authenticated(user: appUser)
         }
         
         // Start automatic token refresh
@@ -206,6 +213,51 @@ class AuthenticationManager: ObservableObject {
             }
         }
     }
+    
+    // MARK: - Mock Authentication for Onboarding
+    
+    @MainActor
+    func setMockAuthenticationForOnboarding() {
+        authenticationStatus = .authenticated(user: AppUser.mockOnboardingUser)
+    }
+    
+    // MARK: - Core Data User Management
+    
+    func getCoreDataUser() -> User? {
+        guard let appUser = currentUser else { return nil }
+        
+        // Validate that appUser.id can be converted to UUID
+        guard let userId = UUID(uuidString: appUser.id) else {
+            print("Error: AppUser ID '\(appUser.id)' is not a valid UUID string")
+            return nil
+        }
+        
+        let context = CoreDataStack.shared.context
+        let fetchRequest: NSFetchRequest<User> = User.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "id == %@", userId as CVarArg)
+        
+        do {
+            let existingUsers = try context.fetch(fetchRequest)
+            if let existingUser = existingUsers.first {
+                return existingUser
+            }
+            
+            // Create new Core Data User entity
+            let coreDataUser = User(context: context)
+            coreDataUser.id = userId
+            coreDataUser.email = appUser.email
+            coreDataUser.name = appUser.name
+            coreDataUser.profileImageURL = appUser.profileImageURL
+            coreDataUser.createdAt = appUser.createdAt
+            coreDataUser.updatedAt = appUser.updatedAt
+            
+            try context.save()
+            return coreDataUser
+        } catch {
+            print("Error creating or fetching Core Data User: \(error)")
+            return nil
+        }
+    }
 }
 
 // MARK: - Convenience Properties
@@ -216,7 +268,7 @@ extension AuthenticationManager {
         authenticationStatus.isAuthenticated
     }
     
-    var currentUser: User? {
+    var currentUser: AppUser? {
         authenticationStatus.user
     }
     

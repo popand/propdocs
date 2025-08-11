@@ -47,7 +47,7 @@ class PropertyRepository: PropertyRepositoryProtocol {
     
     init(coreDataStack: CoreDataStack = CoreDataStack.shared) {
         self.coreDataStack = coreDataStack
-        self.context = coreDataStack.mainContext
+        self.context = coreDataStack.context
     }
     
     // MARK: - Fetch Operations
@@ -406,15 +406,12 @@ struct PropertyStatistics {
 extension Publisher where Failure == Error {
     func async() async throws -> Output {
         return try await withCheckedThrowingContinuation { continuation in
-            var cancellable: AnyCancellable?
-            
-            cancellable = first()
+            let cancellable = first()
                 .timeout(.seconds(30), scheduler: DispatchQueue.global()) {
                     PropertyRepositoryError.timeout
                 }
                 .sink(
                     receiveCompletion: { completion in
-                        defer { cancellable = nil }
                         switch completion {
                         case .finished: break
                         case .failure(let error): 
@@ -422,10 +419,10 @@ extension Publisher where Failure == Error {
                         }
                     },
                     receiveValue: { value in
-                        defer { cancellable = nil }
                         continuation.resume(returning: value)
                     }
                 )
+            _ = cancellable // Silence unused variable warning
         }
     }
 }

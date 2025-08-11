@@ -10,6 +10,39 @@ import Combine
 import CoreLocation
 import SwiftUI
 
+extension AnyPublisher {
+    func async() async throws -> Output {
+        return try await withCheckedThrowingContinuation { continuation in
+            var cancellable: AnyCancellable?
+            var hasResumed = false
+            
+            cancellable = self
+                .timeout(.seconds(30), scheduler: DispatchQueue.main)
+                .sink(
+                    receiveCompletion: { completion in
+                        defer { cancellable?.cancel() }
+                        guard !hasResumed else { return }
+                        hasResumed = true
+                        
+                        switch completion {
+                        case .finished:
+                            // If we get here without a value, it means the publisher completed without emitting
+                            continuation.resume(throwing: URLError(.unknown))
+                        case .failure(let error):
+                            continuation.resume(throwing: error)
+                        }
+                    },
+                    receiveValue: { value in
+                        defer { cancellable?.cancel() }
+                        guard !hasResumed else { return }
+                        hasResumed = true
+                        continuation.resume(returning: value)
+                    }
+                )
+        }
+    }
+}
+
 @MainActor
 class PropertyViewModel: ObservableObject {
     
@@ -106,7 +139,7 @@ class PropertyViewModel: ObservableObject {
     // MARK: - Public Methods
     
     func loadProperties() {
-        guard let user = authenticationManager.currentUser else {
+        guard let user = authenticationManager.getCoreDataUser() else {
             error = "User not authenticated"
             return
         }
@@ -134,7 +167,7 @@ class PropertyViewModel: ObservableObject {
     }
     
     func loadActiveProperty() {
-        guard let user = authenticationManager.currentUser else { return }
+        guard let user = authenticationManager.getCoreDataUser() else { return }
         
         propertyRepository.getActiveProperty(for: user)
             .receive(on: DispatchQueue.main)
@@ -148,7 +181,7 @@ class PropertyViewModel: ObservableObject {
     }
     
     func setActiveProperty(_ property: Property) {
-        guard let user = authenticationManager.currentUser else { return }
+        guard let user = authenticationManager.getCoreDataUser() else { return }
         
         activeProperty = property
         
@@ -178,7 +211,7 @@ class PropertyViewModel: ObservableObject {
     }
     
     func createProperty() {
-        guard let user = authenticationManager.currentUser else {
+        guard let user = authenticationManager.getCoreDataUser() else {
             error = "User not authenticated"
             return
         }
@@ -190,12 +223,22 @@ class PropertyViewModel: ObservableObject {
         
         Task {
             do {
-                let property = try await propertyRepository.createProperty(
-                    name: propertyName,
-                    addressString: propertyAddress,
-                    propertyType: selectedPropertyType,
-                    for: user
+                // Create property address from string
+                let addressComponents = propertyAddress.components(separatedBy: ", ")
+                let propertyAddressObj = PropertyAddress(
+                    street: addressComponents.first ?? "",
+                    city: addressComponents.count > 1 ? addressComponents[1] : "",
+                    state: addressComponents.count > 2 ? addressComponents[2] : "",
+                    postalCode: addressComponents.count > 3 ? addressComponents[3] : ""
                 )
+                
+                let createData = CreatePropertyData(
+                    name: propertyName,
+                    address: propertyAddressObj,
+                    propertyType: selectedPropertyType
+                )
+                
+                let property = try await propertyRepository.createProperty(createData, for: user).async()
                 
                 await MainActor.run {
                     self.properties.append(property)
@@ -297,7 +340,7 @@ class PropertyViewModel: ObservableObject {
     // MARK: - Search
     
     private func performSearch(query: String) {
-        guard !query.isEmpty, let user = authenticationManager.currentUser else {
+        guard !query.isEmpty, let user = authenticationManager.getCoreDataUser() else {
             searchResults = []
             isSearching = false
             return
@@ -326,17 +369,18 @@ class PropertyViewModel: ObservableObject {
     // MARK: - Statistics
     
     private func loadStatistics() {
-        guard let user = authenticationManager.currentUser else { return }
+        guard authenticationManager.currentUser != nil else { return }
         
-        propertyRepository.getPropertyStatistics(for: user)
-            .receive(on: DispatchQueue.main)
-            .sink(
-                receiveCompletion: { _ in },
-                receiveValue: { [weak self] statistics in
-                    self?.propertyStatistics = statistics
-                }
-            )
-            .store(in: &cancellables)
+        // TODO: Implement getPropertyStatistics in repository protocol
+        // propertyRepository.getPropertyStatistics(for: user)
+        //     .receive(on: DispatchQueue.main)
+        //     .sink(
+        //         receiveCompletion: { _ in },
+        //         receiveValue: { [weak self] statistics in
+        //             self?.propertyStatistics = statistics
+        //         }
+        //     )
+        //     .store(in: &cancellables)
     }
     
     // MARK: - Validation

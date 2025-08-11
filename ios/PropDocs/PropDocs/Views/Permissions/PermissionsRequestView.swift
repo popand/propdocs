@@ -277,8 +277,7 @@ struct PermissionRowView: View {
 struct PrimaryButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .font(.headline)
-            .fontWeight(.semibold)
+            .font(.headline.weight(.semibold))
             .foregroundColor(.white)
             .frame(maxWidth: .infinity)
             .padding(.vertical, 16)
@@ -295,8 +294,7 @@ struct PrimaryButtonStyle: ButtonStyle {
 struct SecondaryButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .font(.headline)
-            .fontWeight(.medium)
+            .font(.headline.weight(.medium))
             .foregroundColor(.blue)
             .frame(maxWidth: .infinity)
             .padding(.vertical, 16)
@@ -317,8 +315,7 @@ struct SecondaryButtonStyle: ButtonStyle {
 struct CompactButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .font(.caption)
-            .fontWeight(.semibold)
+            .font(.caption.weight(.semibold))
             .foregroundColor(.blue)
             .padding(.horizontal, 12)
             .padding(.vertical, 6)

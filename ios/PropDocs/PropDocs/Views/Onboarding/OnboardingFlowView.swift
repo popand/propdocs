@@ -9,6 +9,7 @@ import SwiftUI
 
 struct OnboardingFlowView: View {
     @StateObject private var viewModel = OnboardingViewModel()
+    @EnvironmentObject private var authenticationViewModel: AuthenticationViewModel
     @Environment(\.dismiss) private var dismiss
     @Binding var isPresented: Bool
     
@@ -44,7 +45,7 @@ struct OnboardingFlowView: View {
                     .padding(.bottom, 32)
             }
         }
-        .toolbar(.hidden, for: .navigationBar)
+        .navigationBarHidden(true)
         .onAppear {
             viewModel.startOnboarding()
         }
@@ -136,11 +137,15 @@ struct OnboardingFlowView: View {
     
     private func skipOnboarding() {
         viewModel.completeOnboarding()
+        // Authenticate user with mock credentials to access the app
+        authenticationViewModel.completeOnboardingWithMockAuth()
         isPresented = false
     }
     
     private func completeOnboarding() {
         viewModel.completeOnboarding()
+        // Authenticate user with mock credentials to access the app
+        authenticationViewModel.completeOnboardingWithMockAuth()
         isPresented = false
     }
 }
@@ -152,15 +157,18 @@ struct OnboardingFlowView_Previews: PreviewProvider {
         Group {
             // Light mode
             OnboardingFlowView(isPresented: .constant(true))
+                .environmentObject(AuthenticationViewModel())
                 .previewDisplayName("Light Mode")
             
             // Dark mode
             OnboardingFlowView(isPresented: .constant(true))
+                .environmentObject(AuthenticationViewModel())
                 .preferredColorScheme(.dark)
                 .previewDisplayName("Dark Mode")
             
             // Different device sizes
             OnboardingFlowView(isPresented: .constant(true))
+                .environmentObject(AuthenticationViewModel())
                 .previewDevice("iPhone SE (3rd generation)")
                 .previewDisplayName("iPhone SE")
         }

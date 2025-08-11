@@ -119,7 +119,7 @@ struct BiometricPolicyConfiguration: Codable {
 
 // MARK: - Biometric Authentication Manager
 
-class BiometricAuthenticationManager: ObservableObject {
+class BiometricAuthenticationManager: ObservableObject, @unchecked Sendable {
     static let shared = BiometricAuthenticationManager()
     
     @Published var isEnabled: Bool = false
