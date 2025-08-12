@@ -11,13 +11,58 @@ struct HomeView: View {
     
     @EnvironmentObject private var propertyViewModel: PropertyViewModel
     @State private var showPropertySelector = false
+    @State private var showAddProperty = false
+    
+    var body: some View {
+        Group {
+            if propertyViewModel.properties.isEmpty {
+                // Empty State - No Properties
+                PropertyEmptyStateView()
+            } else {
+                // Dashboard Content - Has Properties
+                DashboardContentView(
+                    showPropertySelector: $showPropertySelector,
+                    showAddProperty: $showAddProperty
+                )
+                .environmentObject(propertyViewModel)
+            }
+        }
+        .background(PropDocsColors.groupedBackgroundPrimary)
+        .navigationBarHidden(true)
+        .sheet(isPresented: $showPropertySelector) {
+            PropertySelectorView()
+                .environmentObject(propertyViewModel)
+        }
+        .sheet(isPresented: $showAddProperty) {
+            PropertyCreationView()
+                .environmentObject(propertyViewModel)
+        }
+        .onAppear {
+            // Load properties when view appears
+            if propertyViewModel.properties.isEmpty {
+                propertyViewModel.loadProperties()
+            }
+        }
+    }
+}
+
+// MARK: - Dashboard Content
+
+struct DashboardContentView: View {
+    
+    @EnvironmentObject private var propertyViewModel: PropertyViewModel
+    @Binding var showPropertySelector: Bool
+    @Binding var showAddProperty: Bool
     
     var body: some View {
         ScrollView {
             LazyVStack(spacing: 0) {
                 // Dashboard Header
-                DashboardHeaderView(showPropertySelector: $showPropertySelector)
-                    .environmentObject(propertyViewModel)
+                DashboardHeaderView(
+                    showPropertySelector: $showPropertySelector,
+                    showAddProperty: $showAddProperty
+                )
+                .environmentObject(propertyViewModel)
                 
                 // Main Content
                 VStack(spacing: Spacing.lg) {
@@ -28,16 +73,10 @@ struct HomeView: View {
                     RecentActivitySection()
                     
                     // Quick Actions Section
-                    QuickActionsSection()
+                    QuickActionsSection(showAddProperty: $showAddProperty)
                 }
                 .padding(.top, Spacing.md)
             }
-        }
-        .background(PropDocsColors.groupedBackgroundPrimary)
-        .navigationBarHidden(true)
-        .sheet(isPresented: $showPropertySelector) {
-            PropertySelectorView()
-                .environmentObject(propertyViewModel)
         }
     }
 }
@@ -48,6 +87,7 @@ struct DashboardHeaderView: View {
     
     @EnvironmentObject private var propertyViewModel: PropertyViewModel
     @Binding var showPropertySelector: Bool
+    @Binding var showAddProperty: Bool
     
     var body: some View {
         ZStack {
@@ -67,6 +107,15 @@ struct DashboardHeaderView: View {
                         .foregroundColor(.white)
                     
                     Spacer()
+                    
+                    // Add Property Button
+                    IconButton(
+                        systemImage: "plus.circle",
+                        size: 28,
+                        tintColor: .white
+                    ) {
+                        showAddProperty = true
+                    }
                     
                     // Profile Button
                     IconButton(
@@ -361,12 +410,17 @@ struct ActivityItemView: View {
 
 struct QuickActionsSection: View {
     
-    private let quickActions: [QuickAction] = [
-        QuickAction(title: "Add Asset", systemImage: "shippingbox", color: .propDocsBlue),
-        QuickAction(title: "Schedule Task", systemImage: "calendar", color: .propDocsGreen),
-        QuickAction(title: "View Report", systemImage: "chart.bar", color: .propDocsOrange),
-        QuickAction(title: "Take Photo", systemImage: "camera", color: .propdocsPurple)
-    ]
+    @Binding var showAddProperty: Bool
+    
+    private func quickActions() -> [QuickAction] {
+        [
+            QuickAction(title: "Add Property", systemImage: "house.fill", color: .propDocsBlue, action: .addProperty),
+            QuickAction(title: "Add Asset", systemImage: "shippingbox", color: .propDocsBlue, action: .addAsset),
+            QuickAction(title: "Schedule Task", systemImage: "calendar", color: .propDocsGreen, action: .scheduleTask),
+            QuickAction(title: "View Report", systemImage: "chart.bar", color: .propDocsOrange, action: .viewReport),
+            QuickAction(title: "Take Photo", systemImage: "camera", color: .propdocsPurple, action: .takePhoto)
+        ]
+    }
     
     var body: some View {
         VStack(spacing: Spacing.md) {
@@ -383,8 +437,11 @@ struct QuickActionsSection: View {
             // Actions Scroll View
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: Spacing.md) {
-                    ForEach(quickActions, id: \.title) { action in
-                        QuickActionButton(action: action)
+                    ForEach(quickActions(), id: \.title) { action in
+                        QuickActionButton(
+                            action: action,
+                            showAddProperty: $showAddProperty
+                        )
                     }
                 }
                 .padding(.horizontal, Spacing.md)
@@ -398,6 +455,7 @@ struct QuickActionsSection: View {
 struct QuickActionButton: View {
     
     let action: QuickAction
+    @Binding var showAddProperty: Bool
     
     var body: some View {
         VStack(spacing: Spacing.sm) {
@@ -421,7 +479,26 @@ struct QuickActionButton: View {
         .background(PropDocsColors.groupedBackgroundSecondary)
         .clipShape(RoundedRectangle(cornerRadius: CornerRadius.md))
         .onTapGesture {
-            // Handle action tap
+            handleAction()
+        }
+    }
+    
+    private func handleAction() {
+        switch action.action {
+        case .addProperty:
+            showAddProperty = true
+        case .addAsset:
+            // Handle add asset
+            break
+        case .scheduleTask:
+            // Handle schedule task
+            break
+        case .viewReport:
+            // Handle view report
+            break
+        case .takePhoto:
+            // Handle take photo
+            break
         }
     }
 }
@@ -514,6 +591,15 @@ struct QuickAction {
     let title: String
     let systemImage: String
     let color: Color
+    let action: QuickActionType
+}
+
+enum QuickActionType {
+    case addProperty
+    case addAsset
+    case scheduleTask
+    case viewReport
+    case takePhoto
 }
 
 // MARK: - Corner Radius Extension

@@ -18,12 +18,14 @@ enum PropDocsButtonStyle {
 
 enum PropDocsButtonSize {
     case small
+    case compact
     case medium
     case large
     
     var height: CGFloat {
         switch self {
         case .small: return 32
+        case .compact: return 36
         case .medium: return 44
         case .large: return 56
         }
@@ -32,6 +34,7 @@ enum PropDocsButtonSize {
     var fontSize: Font {
         switch self {
         case .small: return .footnote(.medium)
+        case .compact: return .footnote(.semibold)
         case .medium: return .body(.semibold)
         case .large: return .headline(.semibold)
         }
@@ -40,6 +43,7 @@ enum PropDocsButtonSize {
     var horizontalPadding: CGFloat {
         switch self {
         case .small: return Spacing.md
+        case .compact: return Spacing.md
         case .medium: return Spacing.lg
         case .large: return Spacing.xl
         }
