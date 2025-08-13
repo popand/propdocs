@@ -34,7 +34,7 @@ PropDocs is a mobile-first property asset management system that helps homeowner
 
 See PropDocs in action with our first-run demo:
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/kdp4HPriFBo" title="PropDocs Demo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+[Watch the demo on YouTube](https://youtube.com/shorts/kdp4HPriFBo?si=wTVib3-Ll85naLOv)
 
 *This demo showcases the initial user experience, including property setup, asset registration, and core app functionality.*
 
