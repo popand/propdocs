@@ -30,6 +30,14 @@ PropDocs is a mobile-first property asset management system that helps homeowner
 - **Asset Health Monitoring**: Visual indicators of asset condition and compliance
 - **Export Capabilities**: Generate reports for home sales and property management
 
+## 🎬 Demo
+
+See PropDocs in action with our first-run demo:
+
+https://github.com/user-attachments/assets/propdocs-firstrun.mov
+
+*This demo showcases the initial user experience, including property setup, asset registration, and core app functionality.*
+
 ## 🎯 Target Audience
 
 - **Homeowners** (ages 30-65) managing single-family homes or condominiums
